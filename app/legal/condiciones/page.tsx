@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PLANS, TAG_PACK } from "@/lib/pricing";
+import { GUARANTEE, PLANS, TAG_PACK } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Condiciones de contratación",
@@ -22,9 +22,17 @@ export default function CondicionesPage() {
           </li>
         ))}
         <li>
-          <strong>Pack de {TAG_PACK.units} tags NFC:</strong> {TAG_PACK.price}, pago único.
+          <strong>Pack adicional de {TAG_PACK.units} tags NFC:</strong> {TAG_PACK.price}, pago
+          único. Los planes de pago ya incluyen tags.
         </li>
       </ul>
+
+      <h2>Garantía de devolución</h2>
+      <p>
+        Lo que se anuncia en la web: «{GUARANTEE}» [CONCRETAR el procedimiento: a qué dirección se
+        solicita, plazo de devolución del importe y medio de reembolso. Al ser una garantía
+        comercial voluntaria, se suma al derecho de desistimiento legal, no lo sustituye.]
+      </p>
 
       <h2>Duración y renovación</h2>
       <p>
@@ -35,9 +43,10 @@ export default function CondicionesPage() {
 
       <h2>Qué ocurre con el inventario al terminar</h2>
       <p>
-        [La página de precios dice que al acabar el plan Mudanza «pasas a anual o se borra».
-        Concretar: plazo de gracia, aviso previo y si existe exportación de los datos antes del
-        borrado. Este punto genera reclamaciones si no está claro.]
+        [La web dice ahora que al acabar el plan Mudanza el inventario «sigue visible en modo
+        lectura». Concretar qué significa exactamente: durante cuánto tiempo, qué deja de poder
+        hacerse, si se puede exportar y cuándo se borra definitivamente. Es una promesa pública y
+        debe poder cumplirse tal y como está escrita.]
       </p>
 
       <h2>Derecho de desistimiento</h2>

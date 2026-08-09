@@ -5,13 +5,19 @@ import { FinalCta } from "@/components/FinalCta";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { JsonLd } from "@/components/JsonLd";
-import { Partners } from "@/components/Partners";
+import { PartnersBanner } from "@/components/PartnersBanner";
+import { ProblemSection } from "@/components/ProblemSection";
+import { ProductPreview } from "@/components/ProductPreview";
 import { Pricing } from "@/components/Pricing";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { TrustBlock } from "@/components/TrustBlock";
 import { UseCases } from "@/components/UseCases";
-import { FAQ_HOME } from "@/lib/faq";
-import { faqSchema, graph, howToSchema, softwareApplicationSchema } from "@/lib/schema";
+import { FAQ_PRODUCTO } from "@/lib/faq";
+import { graph, howToSchema, productSchema, softwareApplicationSchema } from "@/lib/schema";
+
+/** La home resume; el FAQPage completo vive solo en /preguntas-frecuentes. */
+const faqHome = FAQ_PRODUCTO.slice(0, 5);
 
 export default function HomePage() {
   return (
@@ -19,21 +25,25 @@ export default function HomePage() {
       <SiteHeader />
       <main id="contenido">
         <Hero />
+        <AudienceSplit />
+        <ProductPreview />
+        <ProblemSection />
         <HowItWorks />
         <AiSection />
         <UseCases />
-        <AudienceSplit />
+        <TrustBlock />
         <Pricing />
-        <Partners />
         <Faq
-          items={FAQ_HOME}
+          items={faqHome}
+          variant="compact"
           title="Lo que todo el mundo pregunta antes de empezar"
-          intro="Si te falta alguna, están todas en preguntas frecuentes."
+          intro="Las respuestas completas, y otras veinte preguntas, están en preguntas frecuentes."
         />
+        <PartnersBanner />
         <FinalCta />
       </main>
       <SiteFooter />
-      <JsonLd data={graph(softwareApplicationSchema(), howToSchema(), faqSchema(FAQ_HOME))} />
+      <JsonLd data={graph(softwareApplicationSchema(), productSchema(), howToSchema())} />
     </>
   );
 }

@@ -23,11 +23,28 @@ npm run deploy     # build + deploy a Cloudflare (requiere npx wrangler login)
 
 | Ruta | Para qué es |
 | --- | --- |
-| `/` | Home: qué es Bixio, cómo funciona, casos, precios y programa de partners. |
-| `/particulares` | Mudanzas, ropa de temporada, trastero y garaje. Incluye comparativa frente al rotulador y a la hoja de cálculo. |
-| `/trasteros` | Programa de partners para self-storage: comisiones, encaje operativo y contacto. |
-| `/preguntas-frecuentes` | Todas las preguntas, incluidas las de "cuándo no te compensa". |
+| `/` | Home: enruta por público, enseña el producto, precios y FAQ resumida. |
+| `/particulares` | Mudanzas, ropa de temporada, trastero y garaje. Comparativa frente al rotulador y a la hoja de cálculo. |
+| `/mudanza` | Landing de intención alta: el método por fechas para no perder nada al mudarse. |
+| `/trasteros` | Para operadores de self-storage: retención primero, comisión después. |
+| `/trasteros/calculadora` | Simulador de comisión y de valor de retención. Lead magnet B2B. |
+| `/preguntas-frecuentes` | **Fuente canónica** de las FAQ y única página con schema `FAQPage`. |
+| `/lista-de-espera` | Destino de todos los CTA cuando no hay JavaScript. Sin indexar. |
 | `/legal/*` | Aviso legal, privacidad, condiciones y cookies. **Borradores sin indexar.** |
+
+## Captura de leads
+
+Todos los CTA son enlaces a `/lista-de-espera`; una isla de cliente
+(`components/LeadCapture.tsx`) intercepta el clic y abre el modal. Si el
+JavaScript falla, el enlace lleva a la página completa: nunca hay un botón
+muerto.
+
+Cada lead guarda email, segmento (`¿qué vas a organizar?`), página de origen y
+CTA pulsado, y marca `partnerLead` cuando la respuesta es «gestiono trasteros».
+
+Sin `NEXT_PUBLIC_LEADS_ENDPOINT` configurado, el formulario abre el correo del
+usuario con los datos escritos en vez de fingir que ha guardado algo. Para
+persistir en Cloudflare D1, ver `worker/README.md`.
 
 ## Estructura
 
@@ -55,8 +72,9 @@ public/llms.txt      # resumen del producto para asistentes de IA
 
 - **Precios**: `lib/pricing.ts`. Cambia ahí y se actualizan la tabla, las páginas
   y los datos estructurados a la vez.
-- **Preguntas frecuentes**: `lib/faq.ts`. Añadir una pregunta la publica en la
-  página y en el JSON-LD de FAQ sin tocar nada más.
+- **Preguntas frecuentes**: `lib/faq.ts`. Cada entrada tiene `a` (respuesta
+  completa, solo en la página canónica) y `short` (resumen para las páginas
+  satélite, que enlazan a la completa). Así no se canibalizan entre ellas.
 - **Textos de sección**: cada componente declara su contenido en un array arriba
   del archivo.
 - **Colores y tipografías**: variables CSS en `:root`, en `app/globals.css`.

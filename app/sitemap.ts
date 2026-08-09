@@ -7,8 +7,10 @@ export const dynamic = "force-static";
 const ROUTES: { path: string; priority: number; changeFrequency: "monthly" | "yearly" }[] = [
   { path: "/", priority: 1, changeFrequency: "monthly" },
   { path: "/particulares", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/mudanza", priority: 0.9, changeFrequency: "monthly" },
   { path: "/trasteros", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/preguntas-frecuentes", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/trasteros/calculadora", priority: 0.6, changeFrequency: "yearly" },
+  { path: "/preguntas-frecuentes", priority: 0.8, changeFrequency: "monthly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

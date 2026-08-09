@@ -1,7 +1,10 @@
 /**
- * Fuente única de los precios: la usan la tabla de precios, las páginas de
- * particulares y trasteros, y el JSON-LD de ofertas. Si cambia un precio,
- * cambia aquí y se propaga a todo, incluidos los datos estructurados.
+ * Fuente única de precios y condiciones. La usan la tabla de precios, las
+ * páginas, el JSON-LD de ofertas, la página de condiciones y llms.txt.
+ *
+ * Los tags van INCLUIDOS en los planes de pago (decisión D2 del brief): antes
+ * el usuario sumaba 35 € + 29 € y decidía dos veces. Ahora el precio se lee
+ * como un producto completo.
  */
 
 export type Plan = {
@@ -17,7 +20,8 @@ export type Plan = {
   billing: string;
   features: string[];
   cta: string;
-  href: string;
+  /** Segmento con el que se precarga el formulario de lista de espera */
+  segment?: string;
   featured?: boolean;
   badge?: string;
 };
@@ -36,12 +40,12 @@ export const PLANS: Plan[] = [
     billing: "Gratis, sin caducidad",
     features: [
       "Hasta 10 cajas",
-      "Catalogado por foto, con cuota mensual",
+      "5 fotos catalogadas con IA cada mes",
       "Búsqueda por nombre de objeto",
       "Un usuario",
     ],
     cta: "Crear cuenta",
-    href: "#",
+    segment: "casa",
   },
   {
     id: "mudanza",
@@ -53,65 +57,72 @@ export const PLANS: Plan[] = [
     period: " / una vez",
     billing: "Pago único, 30 días de acceso",
     features: [
-      "30 días de acceso completo",
+      "25 tags NFC incluidos",
+      "Cajas sin límite durante 30 días",
+      "Fotos con IA sin límite durante los 30 días",
       "Hasta 5 personas en la misma mudanza",
-      "Catalogado por foto sin racanear",
-      "Al acabar, pasas a anual o se borra",
+      "Al acabar, tu inventario sigue visible en modo lectura",
     ],
     cta: "Activar mudanza",
-    href: "#",
+    segment: "mudanza",
   },
   {
     id: "particulares",
     tagline: "Anual",
     name: "Particulares",
     desc: "Tu casa organizada todo el año, en una sola ubicación.",
-    amount: 35,
-    price: "35 €",
+    amount: 45,
+    price: "45 €",
     period: " / año",
     billing: "Suscripción anual",
     features: [
-      "Una ubicación (casa o trastero)",
-      "Fotos guardadas sin caducidad",
-      "Búsqueda con IA y copia de seguridad",
-      "Pack de tags aparte",
+      "25 tags NFC incluidos",
+      "Cajas sin límite",
+      "200 fotos con IA al año",
+      "Una ubicación y hasta 5 usuarios",
+      "Fotos guardadas sin caducidad y copia de seguridad",
     ],
     cta: "Elegir este plan",
-    href: "#",
+    segment: "casa",
   },
   {
     id: "particulares-plus",
     tagline: "Anual",
     name: "Particulares+",
     desc: "Trastero alquilado, garaje propio y lo que hay en casa, todo junto.",
-    amount: 59,
-    price: "59 €",
+    amount: 69,
+    price: "69 €",
     period: " / año",
     billing: "Suscripción anual",
     features: [
-      "Trastero externo + ubicación propia",
-      "Objetos sueltos de casa, no solo cajas",
-      "Hasta 100 tags activables",
+      "60 tags NFC incluidos",
+      "Dos ubicaciones: casa y trastero",
+      "Fotos con IA sin límite",
+      "Objetos sueltos, no solo cajas",
       "Cuenta compartida con toda la casa",
     ],
     cta: "Elegir este plan",
-    href: "#",
+    segment: "trastero",
     featured: true,
     badge: "Completa",
   },
 ];
 
+/** Packs adicionales, para quien se queda corto con los tags incluidos. */
 export const TAG_PACK = {
   units: 100,
   price: "29 €",
   amount: 29,
 };
 
+/** Decisión D3 del brief. */
+export const GUARANTEE =
+  "30 días de garantía en los planes anuales. Si no te sirve, te devolvemos el dinero sin preguntas y los tags te los quedas.";
+
 /**
- * Comisión POR VENTA, no por recurrencia: el partner cobra cuando entra la
- * venta, y las renovaciones se las queda Bixio. Los porcentajes vienen de la
- * versión anterior de la página; CONFIRMAR que siguen siendo estos ahora que
- * no incluyen la recurrencia.
+ * Comisión POR VENTA, no por recurrencia: decisión de Iago, mantenida frente a
+ * la recomendación del brief. Si algún día pasa a recurrente, hay que tocar
+ * también el mock del panel de partner y el texto de PARTNER_TERMS.
  */
 export const PARTNER_COMMISSIONS = [
   { num: "40 %", label: "de cada suscripción vendida con tu enlace o tu código" },
@@ -119,4 +130,15 @@ export const PARTNER_COMMISSIONS = [
 ];
 
 export const PARTNER_TERMS =
-  "La comisión se cobra en la venta, no en las renovaciones: cuando el cliente renueva al año siguiente, esa suscripción ya no genera comisión. A cambio no hay cuota de alta, ni exclusividad, ni objetivos mínimos.";
+  "La comisión se cobra en la venta, no en las renovaciones. Sin cuota de alta, sin exclusividad y sin objetivos mínimos.";
+
+/**
+ * Cifras del sector que sostienen el argumento de retención en /trasteros.
+ * Son estimaciones de rango, no datos medidos: se presentan como tales.
+ */
+export const RETENTION = {
+  monthlyUnitRevenueLow: 90,
+  monthlyUnitRevenueHigh: 150,
+  /** 40 % de una suscripción de 45 € */
+  commissionPerCustomer: 18,
+};

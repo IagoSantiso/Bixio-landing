@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@/components/Analytics";
+import { LeadCapture } from "@/components/LeadCapture";
 import { JsonLd } from "@/components/JsonLd";
 import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
 import { ONE_LINER, SITE_NAME, SITE_URL } from "@/lib/site";
@@ -60,6 +61,7 @@ export default function RootLayout({
           Saltar al contenido
         </a>
         {children}
+        <LeadCapture />
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />
         <Analytics />
       </body>

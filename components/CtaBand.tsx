@@ -6,6 +6,8 @@ export function CtaBand({
   text,
   cta,
   href,
+  dataCta,
+  segment,
   secondary,
 }: {
   eyebrow: string;
@@ -13,6 +15,8 @@ export function CtaBand({
   text: string;
   cta: string;
   href: string;
+  dataCta?: string;
+  segment?: string;
   secondary?: { label: string; href: string };
 }) {
   return (
@@ -22,7 +26,7 @@ export function CtaBand({
         <h2>{title}</h2>
         <p>{text}</p>
         <div className="cierre-cta">
-          <Link className="btn btn-coral" href={href}>
+          <Link className="btn btn-coral" href={href} data-cta={dataCta} data-segment={segment}>
             {cta}
           </Link>
           {secondary && (

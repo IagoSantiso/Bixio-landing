@@ -1,15 +1,20 @@
 const displayFont = { fontFamily: "var(--font-display)" };
 const bodyFont = { fontFamily: "var(--font-body)" };
 
+/**
+ * "Este mes" y "clientes activos" prometían ingreso recurrente, y la comisión
+ * de Bixio se cobra una vez por venta. El mock decía lo contrario que la letra
+ * pequeña de la misma página, así que se ajusta a lo que el partner va a ver.
+ */
 const kpis = [
-  { x: 28, value: "312 €", label: "este mes", fill: "#FFC857", text: "#2D2A32" },
-  { x: 152, value: "48", label: "clientes activos", fill: "#FF7A5C", text: "#FFF8F3" },
+  { x: 28, value: "312 €", label: "acumulado", fill: "#FFC857", text: "#2D2A32" },
+  { x: 152, value: "48", label: "ventas", fill: "#FF7A5C", text: "#FFF8F3" },
   { x: 276, value: "9", label: "packs vendidos", fill: "#FFF8F3", text: "#2D2A32" },
 ];
 
 export function PartnerDashboardIllustration() {
   return (
-    <svg viewBox="0 0 420 300" role="img" aria-label="Panel de partner con ingresos y clientes activos">
+    <svg viewBox="0 0 420 300" role="img" aria-label="Panel de partner con comisiones acumuladas, ventas y packs vendidos">
       <rect x="10" y="14" width="400" height="272" rx="18" fill="#FFF8F3" stroke="#2D2A32" strokeWidth="2.5" />
       <path d="M10 54h400" stroke="#2D2A32" strokeWidth="2.5" />
       <circle cx="32" cy="34" r="5" fill="#FF7A5C" />

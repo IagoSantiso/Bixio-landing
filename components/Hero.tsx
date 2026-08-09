@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { HeroIllustration } from "./illustrations/HeroIllustration";
 
 export function Hero() {
@@ -7,24 +8,25 @@ export function Hero() {
         <div>
           <div className="eyebrow">Inventario con tags NFC</div>
           <h1>
-            Despídete del
+            Sabe lo que hay en cada caja.
             <br />
-            <span className="accent">caos</span> de tus cajas.
+            <span className="accent">Sin abrir ninguna.</span>
           </h1>
           <p className="hero-sub">
-            Pega un tag, haz una foto y Bixio cataloga lo que hay dentro. Luego solo preguntas
-            “¿dónde está el taladro?” y te dice en qué caja está. Sin abrir nada.
+            Pega un tag NFC, haz una foto y Bixio cataloga el contenido solo. Luego preguntas
+            «¿dónde está el taladro?» y te dice la caja, la estantería y el sitio.
           </p>
           <div className="hero-cta">
-            <a className="btn" href="#precios">
-              Empezar gratis
-            </a>
-            <a className="btn btn-ghost" href="#como">
+            <Link className="btn" href="/lista-de-espera" data-cta="hero-home">
+              Probar gratis — 10 cajas
+            </Link>
+            <Link className="btn btn-ghost" href="#como">
               Ver cómo funciona
-            </a>
+            </Link>
           </div>
           <p className="hero-note">
-            <span className="dot" /> Sin tarjeta. 10 cajas incluidas para probar.
+            <span className="dot" /> Sin tarjeta. Funciona sin cobertura. Tus fotos no salen de
+            Europa.
           </p>
         </div>
 

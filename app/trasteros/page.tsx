@@ -1,25 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { CtaBand } from "@/components/CtaBand";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { WaitlistForm } from "@/components/WaitlistForm";
 import { PartnerDashboardIllustration } from "@/components/illustrations/PartnerDashboardIllustration";
-import {
-  PhotoStepIllustration,
-  SearchStepIllustration,
-  TagStepIllustration,
-} from "@/components/illustrations/StepIllustrations";
 import { FAQ_TRASTEROS } from "@/lib/faq";
-import { PARTNER_COMMISSIONS, PARTNER_TERMS, TAG_PACK } from "@/lib/pricing";
-import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";
-import { PARTNERS_MAILTO } from "@/lib/site";
+import { PARTNER_COMMISSIONS, PARTNER_TERMS, RETENTION, TAG_PACK } from "@/lib/pricing";
+import { breadcrumbSchema, graph } from "@/lib/schema";
 
-const title = "Vende Bixio en tu trastero y llévate comisión de cada venta";
+const title = "Bixio para trasteros: un motivo más para que tus clientes se queden";
 const description =
-  "Bixio es el inventario con tags NFC que tus inquilinos compran para saber qué guardaron. Tú recibes un enlace y un código de partner, los pones donde quieras y cobras el 40 % de cada suscripción vendida y el 20 % de cada pack de tags.";
+  "Tus inquilinos no saben lo que tienen dentro del box, y por eso lo acaban vaciando. Bixio hace que cada cliente lo tenga catalogado desde el móvil. Tú no gestionas nada y cobras comisión de cada venta.";
 
 export const metadata: Metadata = {
   title,
@@ -38,26 +32,6 @@ const trail = [
   { name: "Para trasteros", path: "/trasteros" },
 ];
 
-/** Qué es el producto, para quien no lo ha visto nunca. */
-const queEs = [
-  {
-    illustration: <TagStepIllustration />,
-    title: "Un tag NFC por caja",
-    text: "Tu inquilino pega una etiqueta en cada caja y le acerca el móvil. La caja queda identificada.",
-  },
-  {
-    illustration: <PhotoStepIllustration />,
-    title: "Una foto del contenido",
-    text: "La IA reconoce lo que hay en la imagen y escribe la lista sola. Él no teclea nada.",
-  },
-  {
-    illustration: <SearchStepIllustration />,
-    title: "Y lo encuentra buscando",
-    text: "Busca «taladro» y sabe en qué caja está. O acerca el móvil a una caja y ve qué contiene sin abrirla, aunque en el box no haya cobertura.",
-  },
-];
-
-/** Cuánto trabajo da: cada uno elige su nivel de esfuerzo. */
 const formas = [
   {
     esfuerzo: "Esfuerzo cero",
@@ -81,7 +55,7 @@ const formas = [
   },
 ];
 
-const porQue = [
+const apoyos = [
   {
     title: "Margen extra sobre lo que ya vendes",
     text: "El box lo alquilas igual. Esto es ingreso adicional sobre el mismo cliente, sin ampliar instalaciones ni contratar a nadie.",
@@ -91,12 +65,12 @@ const porQue = [
     text: "No hay cuota de alta ni compromiso de compra. Si prefieres no almacenar tags, Bixio se los envía al cliente y tu comisión sigue siendo tuya.",
   },
   {
-    title: "Fideliza al inquilino",
-    text: "Quien tiene su trastero catalogado tiene una cosa más atada a tu sitio. Se lo piensa más antes de llevarse las cajas a la competencia.",
+    title: "El soporte no es tuyo",
+    text: "Las dudas del producto las llevamos nosotros desde la app. Tú vendes; no montas un servicio nuevo en el mostrador.",
   },
   {
     title: "Te diferencia en la visita",
-    text: "Enseñar que tu trastero viene con inventario incluido cambia la conversación cuando el cliente está comparando presupuestos por precio.",
+    text: "Cuando alguien compara tres centros por precio, «el nuestro viene con inventario incluido» es lo único que rompe esa comparación.",
   },
 ];
 
@@ -111,21 +85,21 @@ export default function TrasterosPage() {
             <div>
               <div className="eyebrow">Para trasteros y self-storage</div>
               <h1>
-                Un producto más que vender,
+                Tus inquilinos no saben lo que tienen dentro del box.
                 <br />
-                <span className="accent-warm">y no lo gestionas tú.</span>
+                <span className="accent-warm">Por eso lo acaban vaciando.</span>
               </h1>
               <p className="lead">
-                Bixio es la app con la que tus inquilinos saben qué hay en cada caja sin abrirla. Tú
-                recibes un enlace y un código de partner, los pones donde te venga bien, y cobras
-                comisión de cada venta que entre con ellos.
+                Bixio hace que cada cliente tenga su trastero catalogado desde el móvil: sabe qué hay
+                en cada caja sin abrirla. Tú no gestionas nada, no compras stock y no das soporte.
+                Cobras comisión de cada venta.
               </p>
               <div className="hero-cta">
-                <Link className="btn" href="#condiciones">
-                  Ver comisiones
+                <Link className="btn" href="/trasteros/calculadora">
+                  Ver cuánto ganaría mi centro
                 </Link>
-                <Link className="btn btn-ghost btn-ghost-dark" href="#que-es">
-                  ¿Qué es Bixio?
+                <Link className="btn btn-ghost btn-ghost-dark" href="#hablemos">
+                  Hablar 20 minutos
                 </Link>
               </div>
             </div>
@@ -138,31 +112,44 @@ export default function TrasterosPage() {
         <section className="answer">
           <div className="wrap">
             <div className="answer-box">
-              <h2>En una frase</h2>
+              <div className="eyebrow">Lo que esto te aporta</div>
+              <h2>El dinero de la comisión está bien. No es el motivo.</h2>
               <p>
-                Bixio se vende como una tarjeta regalo en un kiosco: tú lo ofreces con tu código, el
-                cliente lo compra y lo usa por su cuenta, y tú te llevas la comisión de esa venta sin
-                dar soporte, sin instalar nada y sin tocar las cosas de nadie.
+                Un cliente de Bixio te deja unos {RETENTION.commissionPerCustomer} € de comisión.
+                Está bien, pero seamos honestos: no vas a cambiar tu negocio por eso.
+              </p>
+              <p>
+                El motivo es otro. Un inquilino que tiene su box catalogado, con las cajas
+                etiquetadas y todo localizable desde el móvil, <strong>tarda más en irse</strong>. Y
+                en tu negocio, retener a un cliente un mes más vale lo que factures por esa unidad:
+                del orden de {RETENTION.monthlyUnitRevenueLow} a {RETENTION.monthlyUnitRevenueHigh} €
+                según ciudad y tamaño.
+              </p>
+              <p>
+                Retén a dos clientes un mes extra al año y habrás ganado más que con toda la comisión
+                de tu centro junta.
+              </p>
+              <p>
+                Y hay una segunda parte, que pasa en la visita comercial: cuando alguien está
+                comparando tres centros por precio, poder decir «el nuestro viene con inventario
+                incluido» es lo único que rompe esa comparación.
+              </p>
+              <p>
+                <strong>
+                  La comisión es el extra. Lo que compras es una razón para que se queden y un
+                  argumento que el de al lado no tiene.
+                </strong>
               </p>
             </div>
           </div>
         </section>
 
-        <section id="que-es">
+        <section>
           <div className="wrap">
-            <div className="section-head">
-              <div className="eyebrow">Primero, qué es</div>
-              <h2>Lo que compra tu inquilino.</h2>
-              <p>
-                Un inventario de sus cajas que se hace solo con el móvil. Tres pasos por caja y no
-                vuelve a mirarlo hasta que necesita algo.
-              </p>
-            </div>
-            <div className="pasos-grid">
-              {queEs.map(({ illustration, title: stepTitle, text }) => (
-                <div className="paso" key={stepTitle}>
-                  {illustration}
-                  <h3>{stepTitle}</h3>
+            <div className="value-grid">
+              {apoyos.map(({ title: benefitTitle, text }) => (
+                <div className="value-card" key={benefitTitle}>
+                  <h3>{benefitTitle}</h3>
                   <p>{text}</p>
                 </div>
               ))}
@@ -173,7 +160,7 @@ export default function TrasterosPage() {
         <section className="casos" id="como-lo-ofreces">
           <div className="wrap">
             <div className="section-head">
-              <div className="eyebrow">Segundo, cuánto trabajo te da</div>
+              <div className="eyebrow">Cuánto trabajo te da</div>
               <h2>El que tú quieras. Todas las formas acaban en el mismo código.</h2>
               <p>
                 No hay integración, ni formación, ni pantalla nueva que aprender. Eliges dónde poner
@@ -192,10 +179,24 @@ export default function TrasterosPage() {
           </div>
         </section>
 
+        <section id="que-compra">
+          <div className="wrap">
+            <div className="section-head">
+              <div className="eyebrow">Qué compra tu inquilino</div>
+              <h2>Un tag por caja, una foto, y lo encuentra buscando.</h2>
+              <p>
+                Pega la etiqueta, fotografía el contenido y la IA escribe la lista. Después busca
+                «taladro» y sabe en qué caja está, o acerca el móvil a una caja y ve lo que hay
+                dentro aunque en el box no haya cobertura.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="b2b" id="condiciones">
           <div className="wrap">
             <div className="section-head">
-              <div className="eyebrow">Tercero, cuánto te llevas</div>
+              <div className="eyebrow">Condiciones</div>
               <h2>Comisión de cada venta que entre con tu código.</h2>
             </div>
             <div className="comisiones">
@@ -212,46 +213,36 @@ export default function TrasterosPage() {
               ninguno y dejar que Bixio se los mande al cliente. Mientras la compra lleve tu enlace o
               tu código, la comisión es tuya en los dos casos.
             </p>
-            <Link className="btn" href={PARTNERS_MAILTO}>
-              Quiero mi código de partner
+            <Link className="btn" href="/trasteros/calculadora">
+              Calcular lo de mi centro
             </Link>
-          </div>
-        </section>
-
-        <section>
-          <div className="wrap">
-            <div className="section-head">
-              <div className="eyebrow">Por qué te interesa</div>
-              <h2>Más ingreso por el mismo cliente, y un motivo más para que se quede.</h2>
-            </div>
-            <div className="value-grid">
-              {porQue.map(({ title: benefitTitle, text }) => (
-                <div className="value-card" key={benefitTitle}>
-                  <h3>{benefitTitle}</h3>
-                  <p>{text}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
         <Faq
           items={FAQ_TRASTEROS}
+          variant="compact"
           title="Lo que preguntan los gestores de trasteros"
-          intro="Las dudas de producto —compatibilidad, precios, privacidad— están en preguntas frecuentes."
+          intro="Las respuestas completas están en preguntas frecuentes, junto con las de negocio."
         />
 
-        <CtaBand
-          eyebrow="Hablemos"
-          title="Cuéntanos cuántos boxes gestionas y te mandamos tu código."
-          text="Sin cuota de alta, sin exclusividad y sin objetivos mínimos. Si no encaja, te lo decimos nosotros."
-          cta="Quiero mi código de partner"
-          href={PARTNERS_MAILTO}
-          secondary={{ label: "Soy particular", href: "/particulares" }}
-        />
+        <section className="cierre" id="hablemos">
+          <div className="wrap legal-wrap">
+            <div className="eyebrow eyebrow-center">Hablemos</div>
+            <h2>Estamos eligiendo los primeros cinco centros.</h2>
+            <p>
+              Buscamos cinco operadores para arrancar antes que nadie: condiciones de fundador,
+              comisión mejorada de por vida y voz en lo que construimos.
+            </p>
+            <p>Veinte minutos por teléfono. Si no encaja, te lo decimos nosotros.</p>
+            <div className="form-card">
+              <WaitlistForm origin="/trasteros" cta="cierre-trasteros" partner />
+            </div>
+          </div>
+        </section>
       </main>
       <SiteFooter />
-      <JsonLd data={graph(faqSchema(FAQ_TRASTEROS), breadcrumbSchema(trail))} />
+      <JsonLd data={graph(breadcrumbSchema(trail))} />
     </>
   );
 }

@@ -71,15 +71,21 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,248,243,.88);backdro
 .btn-sm{padding:9px 18px;font-size:14px;box-shadow:2px 2px 0 var(--carbon)}
 :focus-visible{outline:3px solid var(--coral-text);outline-offset:3px;border-radius:6px}
 
-/* ---------- nav: acciones y menú móvil ---------- */
-.nav-actions{display:flex;align-items:center;gap:12px}
-.nav-mobile{display:none;position:relative}
-.nav-mobile>summary{
-  list-style:none;cursor:pointer;width:44px;height:44px;
+/* ---------- nav: una sola lista en el DOM ---------- */
+.nav-actions{display:flex;align-items:center;gap:24px}
+.nav-disclosure{position:relative;order:-1}
+.nav-disclosure>summary{
+  display:none;list-style:none;cursor:pointer;width:44px;height:44px;
   border:2px solid var(--carbon);border-radius:12px;background:#fff;
-  display:grid;place-items:center;
+  place-items:center;
 }
-.nav-mobile>summary::-webkit-details-marker{display:none}
+.nav-disclosure>summary::-webkit-details-marker{display:none}
+/* En escritorio la lista se ve siempre, aunque el <details> esté cerrado.
+   Hacen falta las dos reglas: los navegadores modernos ocultan el contenido con
+   content-visibility en ::details-content, que display no puede sobrescribir, y
+   los antiguos lo hacen con display:none en los hijos. */
+.nav-disclosure::details-content{content-visibility:visible;block-size:auto}
+.nav-disclosure>.nav-links{display:flex}
 .nav-burger,.nav-burger::before,.nav-burger::after{
   display:block;width:20px;height:2.5px;background:var(--carbon);border-radius:2px;
 }
@@ -87,15 +93,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,248,243,.88);backdro
 .nav-burger::before,.nav-burger::after{content:"";position:absolute;left:0}
 .nav-burger::before{top:-6px}
 .nav-burger::after{top:6px}
-.nav-mobile[open]>summary{background:var(--mostaza)}
-.nav-mobile-panel{
-  position:absolute;right:0;top:calc(100% + 10px);z-index:60;
-  background:var(--crema);border:2px solid var(--carbon);border-radius:18px;
-  box-shadow:5px 5px 0 rgba(45,42,50,.16);
-  padding:10px;display:flex;flex-direction:column;min-width:230px;
-}
-.nav-mobile-panel a{padding:11px 14px;border-radius:12px;font-weight:600;font-size:15px}
-.nav-mobile-panel a:hover{background:var(--crema-2)}
+.nav-disclosure[open]>summary{background:var(--mostaza)}
 
 /* ---------- hero ---------- */
 .hero{padding:70px 0 96px;position:relative;overflow:hidden}
@@ -390,8 +388,18 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
   .price-grid{grid-template-columns:1fr 1fr;gap:20px}
   .plan-desc{min-height:0}
   .paso-arrow{display:none}
-  .nav-links{display:none}
-  .nav-mobile{display:block}
+  .nav-disclosure>summary{display:grid}
+  .nav-disclosure>.nav-links{
+    position:absolute;right:0;top:calc(100% + 10px);z-index:60;
+    flex-direction:column;gap:0;min-width:236px;padding:10px;
+    background:var(--crema);border:2px solid var(--carbon);border-radius:18px;
+    box-shadow:5px 5px 0 rgba(45,42,50,.16);
+  }
+  .nav-disclosure:not([open])::details-content{content-visibility:hidden;block-size:0}
+  .nav-disclosure:not([open])>.nav-links{display:none}
+  .nav-disclosure>.nav-links a{padding:11px 14px;border-radius:12px;font-size:15px}
+  .nav-disclosure>.nav-links a:hover{background:var(--crema-2)}
+  .nav-actions{gap:12px}
   .split-grid,.value-grid,.formas-grid,.offline-grid{gap:22px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
   .hero-sub{max-width:none}
@@ -402,4 +410,143 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
   .foot-grid{grid-template-columns:1fr}
   .price-grid{grid-template-columns:1fr}
   .hero-cta .btn{width:100%;justify-content:center}
+}
+
+/* ---------- prueba visual ---------- */
+.preview{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.1);border-bottom:2px solid rgba(45,42,50,.1)}
+.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:820px}
+.preview-item{margin:0}
+.preview-item svg{width:100%;height:auto;display:block}
+.preview-item figcaption{
+  margin-top:14px;font-family:var(--font-display);font-weight:600;font-size:16px;text-align:center;
+}
+.preview-note{margin-top:26px;font-size:14px;color:var(--muted)}
+
+/* ---------- el problema ---------- */
+.problem{background:var(--carbon);color:var(--crema);padding:70px 0}
+.problem-inner{max-width:760px}
+.problem h2{font-size:clamp(28px,4vw,40px)}
+.problem p{margin-top:18px;font-size:19px;color:rgba(255,248,243,.76)}
+
+/* ---------- confianza ---------- */
+.trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.trust-item{border-left:3px solid var(--coral);padding-left:20px}
+.trust-item h3{font-size:19px;margin-bottom:8px}
+.trust-item p{color:var(--muted);font-size:16px}
+
+/* ---------- banner B2B en la home ---------- */
+.partners-banner{background:var(--carbon);color:var(--crema);padding:44px 0}
+.partners-banner-inner{display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.partners-banner h2{font-size:24px}
+.partners-banner p{color:rgba(255,248,243,.72);margin-top:8px;max-width:560px;font-size:16px}
+
+/* ---------- split compacto ---------- */
+.split-card h2{font-size:23px;margin:6px 0 14px}
+
+/* ---------- FAQ: respuesta y navegación ---------- */
+.faq-item>summary h3{font-size:17.5px;margin:0}
+.faq-answer{padding:0 22px 20px}
+.faq-answer p{color:var(--muted);font-size:16px;max-width:70ch}
+.faq-answer a{
+  display:inline-block;margin-top:10px;font-weight:700;color:var(--coral-text);
+}
+.faq-answer a:hover{text-decoration:underline}
+.faq-more{margin-top:26px;font-weight:700}
+.faq-more a{color:var(--coral-text)}
+.faq-more a:hover{text-decoration:underline}
+.faq-index{margin-top:26px}
+.faq-index ul{list-style:none;display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:0}
+.faq-index a{
+  display:inline-block;padding:8px 16px;border:2px solid var(--carbon);border-radius:999px;
+  font-size:14px;font-weight:600;background:#fff;
+}
+.faq-index a:hover{background:var(--mostaza)}
+
+/* ---------- formularios ---------- */
+.form-card{
+  margin-top:32px;background:#fff;border:2px solid var(--carbon);border-radius:24px;
+  padding:28px;box-shadow:6px 6px 0 rgba(45,42,50,.1);text-align:left;
+}
+.lead-form{display:flex;flex-direction:column;gap:20px}
+.field{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.field label,.field legend{
+  font-family:var(--font-display);font-weight:600;font-size:15px;padding:0;
+}
+.field input[type="email"],.field input[type="tel"]{
+  font:inherit;font-size:16px;padding:13px 16px;border:2px solid var(--carbon);
+  border-radius:14px;background:var(--crema);color:var(--carbon);width:100%;
+}
+.field input::placeholder{color:var(--muted);opacity:.7}
+.radio-row{display:flex;flex-wrap:wrap;gap:10px}
+.radio{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  border:2px solid rgba(45,42,50,.25);border-radius:999px;padding:9px 16px;font-size:15px;
+}
+.radio:has(input:checked){background:var(--mostaza);border-color:var(--carbon)}
+.radio input{accent-color:var(--coral-text);width:16px;height:16px}
+.lead-form .btn{align-self:flex-start}
+.lead-form .btn[disabled]{opacity:.6;cursor:progress}
+.form-done h3{font-size:22px;margin-bottom:10px}
+.form-done p{color:var(--muted)}
+.form-error{color:var(--coral-text);font-size:15px}
+.form-error a{text-decoration:underline}
+
+/* ---------- modal ---------- */
+.modal{
+  border:2px solid var(--carbon);border-radius:26px;padding:0;
+  width:min(520px,92vw);background:var(--crema);color:var(--carbon);
+  box-shadow:8px 8px 0 rgba(45,42,50,.2);
+}
+.modal::backdrop{background:rgba(45,42,50,.55)}
+.modal-inner{padding:32px;position:relative}
+.modal-inner h2{font-size:clamp(24px,4vw,30px);padding-right:40px}
+.modal-lead{color:var(--muted);margin-top:12px;margin-bottom:24px}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:38px;height:38px;
+  border:2px solid var(--carbon);border-radius:12px;background:#fff;
+  font-size:22px;line-height:1;cursor:pointer;color:var(--carbon);
+}
+.modal-close:hover{background:var(--mostaza)}
+
+/* ---------- calculadora ---------- */
+.calc-section{padding-top:0}
+.calc{display:grid;gap:32px}
+.calc-inputs{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:22px;
+  background:#fff;border:2px solid var(--carbon);border-radius:24px;padding:28px;
+  box-shadow:5px 5px 0 rgba(45,42,50,.12);
+}
+.calc-field{display:flex;flex-direction:column;gap:10px}
+.calc-field label{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-family:var(--font-display);font-weight:600;font-size:15px;
+}
+.calc-field output{
+  font-size:17px;color:var(--coral-text);background:var(--crema-2);
+  border-radius:999px;padding:2px 12px;white-space:nowrap;
+}
+.calc-field input[type="range"]{width:100%;accent-color:var(--coral-text)}
+.calc-results{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.calc-card{
+  background:var(--crema-2);border:2px solid var(--carbon);border-radius:24px;padding:26px;
+}
+.calc-card-strong{background:var(--carbon);color:var(--crema);box-shadow:6px 6px 0 var(--coral)}
+.calc-label{
+  font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--coral-text);
+}
+.calc-card-strong .calc-label{color:var(--mostaza)}
+.calc-number{font-family:var(--font-display);font-size:44px;font-weight:600;line-height:1.1;margin:10px 0}
+.calc-card p{color:var(--muted);font-size:15px}
+.calc-card-strong p{color:rgba(255,248,243,.72)}
+.calc-note{font-size:14px;color:var(--muted);max-width:70ch}
+.calc-capture{
+  background:#fff;border:2px dashed rgba(45,42,50,.3);border-radius:24px;padding:28px;
+}
+.calc-capture h3{font-size:21px}
+.calc-capture>p{color:var(--muted);margin:8px 0 22px}
+
+@media(max-width:900px){
+  .preview-grid,.trust-grid,.calc-inputs,.calc-results{grid-template-columns:1fr}
+  .partners-banner-inner{align-items:flex-start}
 }

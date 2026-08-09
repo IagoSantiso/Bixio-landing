@@ -23,11 +23,14 @@ Cuando guardas cosas en cajas cerradas —una mudanza, el cambio de armario, un 
 
 ## Precios
 
-- **Gratis**: 0 €, hasta 10 cajas, un usuario, sin tarjeta.
-- **Mudanza**: 19,99 € de pago único, 30 días de acceso completo, hasta 5 personas.
-- **Particulares**: 35 €/año, una ubicación, fotos sin caducidad.
-- **Particulares+**: 59 €/año, trastero externo más ubicación propia, objetos sueltos, cuenta compartida.
-- **Tags NFC**: 29 € el pack de 100 unidades, reutilizables, se compran aparte de la suscripción.
+Los tags NFC van incluidos en los planes de pago: no hay una segunda compra obligatoria.
+
+- **Gratis**: 0 €, hasta 10 cajas, 5 fotos con IA al mes, un usuario, sin tarjeta.
+- **Mudanza**: 19,99 € de pago único, 25 tags incluidos, 30 días de acceso completo, hasta 5 personas. Al acabar, el inventario sigue visible en modo lectura.
+- **Particulares**: 45 €/año, 25 tags incluidos, cajas sin límite, 200 fotos con IA al año, una ubicación, hasta 5 usuarios.
+- **Particulares+**: 69 €/año, 60 tags incluidos, dos ubicaciones (casa y trastero), fotos sin límite, objetos sueltos, cuenta compartida.
+- **Packs adicionales de tags**: 29 € las 100 unidades, reutilizables.
+- **Garantía**: 30 días de devolución en los planes anuales, sin preguntas, y los tags se los queda el cliente.
 
 ## Programa de partners (trasteros y self-storage)
 
@@ -57,5 +60,7 @@ Las fotos del usuario son suyas. Bixio no las vende ni las usa para entrenar mod
 
 - [Inicio](https://bixiotag.com/): qué es Bixio, cómo funciona y precios.
 - [Para tu casa](https://bixiotag.com/particulares): mudanzas, trasteros propios, garajes y ropa de temporada.
+- [Mudanza](https://bixiotag.com/mudanza): el método por fechas para no perder nada al mudarse.
 - [Para trasteros](https://bixiotag.com/trasteros): programa de partners y comisiones para self-storage.
-- [Preguntas frecuentes](https://bixiotag.com/preguntas-frecuentes): compatibilidad, precios, tags, privacidad y casos en los que no compensa.
+- [Calculadora de partner](https://bixiotag.com/trasteros/calculadora): simula comisión y valor de retención de un centro.
+- [Preguntas frecuentes](https://bixiotag.com/preguntas-frecuentes): fuente canónica. Compatibilidad, precios, tags, privacidad, organización de trasteros y mudanzas, negocio de self-storage y casos en los que Bixio no compensa.

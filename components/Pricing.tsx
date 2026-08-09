@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PLANS as plans, TAG_PACK } from "@/lib/pricing";
+import { GUARANTEE, PLANS as plans, TAG_PACK } from "@/lib/pricing";
 import { CheckIcon } from "./icons";
 
 export function Pricing() {
@@ -10,13 +10,13 @@ export function Pricing() {
           <div className="eyebrow">Precios</div>
           <h2>Una mudanza se paga una vez. Una casa entera, cada año.</h2>
           <p>
-            Si solo te mudas, no necesitas suscripción. Si quieres tenerlo todo controlado siempre,
-            el plan anual mantiene tus fotos y la búsqueda activas.
+            Los tags van incluidos: no hay una segunda compra escondida. Si solo te mudas, no
+            necesitas suscripción.
           </p>
         </div>
         <div className="price-grid">
           {plans.map((plan) => (
-            <div className={plan.featured ? "plan featured" : "plan"} key={plan.name}>
+            <div className={plan.featured ? "plan featured" : "plan"} key={plan.id}>
               {plan.badge && <span className="badge">{plan.badge}</span>}
               <div className="plan-tagline">{plan.tagline}</div>
               <div className="plan-name">{plan.name}</div>
@@ -29,23 +29,28 @@ export function Pricing() {
                 {plan.features.map((feature) => (
                   <li key={feature}>
                     <span className="check">
-                      <CheckIcon color={plan.featured ? "#FFC857" : "#FF7A5C"} />
+                      <CheckIcon color={plan.featured ? "#FFC857" : "#C43417"} />
                     </span>{" "}
                     {feature}
                   </li>
                 ))}
               </ul>
-              <a className={plan.featured ? "btn" : "btn btn-ghost"} href={plan.href}>
+              <Link
+                className={plan.featured ? "btn" : "btn btn-ghost"}
+                href="/lista-de-espera"
+                data-cta={`plan-${plan.id}`}
+                data-segment={plan.segment}
+              >
                 {plan.cta}
-              </a>
+              </Link>
             </div>
           ))}
         </div>
 
         <p className="price-note">
-          Los <strong>tags NFC se compran una vez</strong> y son reutilizables: pack de{" "}
-          {TAG_PACK.units} unidades por {TAG_PACK.price}. ¿Gestionas un negocio de trasteros? Tienes{" "}
-          <Link href="/trasteros">licencia por unidad y comisión</Link>.
+          <strong>{GUARANTEE}</strong> Si necesitas más tags de los que trae tu plan, el pack de{" "}
+          {TAG_PACK.units} cuesta {TAG_PACK.price} y son reutilizables. ¿Gestionas un negocio de
+          trasteros? Tienes <Link href="/trasteros">comisión por cada venta</Link>.
         </p>
       </div>
     </section>

@@ -7,11 +7,12 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { JsonLd } from "@/components/JsonLd";
 import { OfflineSection } from "@/components/OfflineSection";
 import { Pricing } from "@/components/Pricing";
+import { TrustBlock } from "@/components/TrustBlock";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { HeroIllustration } from "@/components/illustrations/HeroIllustration";
 import { FAQ_PARTICULARES } from "@/lib/faq";
-import { breadcrumbSchema, faqSchema, graph, howToSchema } from "@/lib/schema";
+import { breadcrumbSchema, graph, howToSchema } from "@/lib/schema";
 
 const title = "Organizar una mudanza, un trastero o un garaje sin abrir cajas";
 const description =
@@ -85,8 +86,8 @@ const comparativa = [
   },
   {
     metodo: "Bixio",
-    coste: "Desde 0 €, tags aparte",
-    problema: "Necesitas un móvil con NFC y comprar los tags una vez",
+    coste: "0 € para probar. Desde 45 €/año con tags incluidos",
+    problema: "Necesitas un móvil con NFC",
     cuando: "Muchas cajas, cerradas durante meses",
   },
 ];
@@ -112,11 +113,11 @@ export default function ParticularesPage() {
                 de cuarenta cajas que para el altillo de casa.
               </p>
               <div className="hero-cta">
-                <Link className="btn" href="/#precios">
+                <Link className="btn" href="/lista-de-espera" data-cta="hero-particulares">
                   Empezar gratis
                 </Link>
-                <Link className="btn btn-ghost" href="/preguntas-frecuentes">
-                  Resolver mis dudas
+                <Link className="btn btn-ghost" href="#como">
+                  Ver cómo funciona
                 </Link>
               </div>
               <p className="hero-note">
@@ -208,12 +209,15 @@ export default function ParticularesPage() {
           </div>
         </section>
 
+        <TrustBlock variant="garantia" />
+
         <Pricing />
 
         <Faq
           items={FAQ_PARTICULARES}
+          variant="compact"
           title="Dudas de quien se está mudando"
-          intro="Las generales —compatibilidad, precios, privacidad— están en preguntas frecuentes."
+          intro="Las respuestas completas y otras veinte preguntas están en preguntas frecuentes."
         />
 
         <CtaBand
@@ -221,13 +225,14 @@ export default function ParticularesPage() {
           title="La próxima vez que guardes algo, sabrás dónde está."
           text="Diez cajas gratis, sin tarjeta. Si te sirve, sigues."
           cta="Crear mi inventario"
-          href="/#precios"
+          href="/lista-de-espera"
+          dataCta="cierre-particulares"
           secondary={{ label: "Gestiono trasteros", href: "/trasteros" }}
         />
       </main>
       <SiteFooter />
       <JsonLd
-        data={graph(howToSchema(), faqSchema(FAQ_PARTICULARES), breadcrumbSchema(trail))}
+        data={graph(howToSchema(), breadcrumbSchema(trail))}
       />
     </>
   );

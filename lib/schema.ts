@@ -75,6 +75,29 @@ export function softwareApplicationSchema() {
   };
 }
 
+export function productSchema() {
+  return {
+    "@type": "Product",
+    name: `Pack de ${TAG_PACK.units} tags NFC de Bixio`,
+    description:
+      "Etiquetas NFC adhesivas y reutilizables, una por caja. Se asignan desde la app de Bixio y se pueden despegar y reasignar a otra caja.",
+    brand: { "@id": ORG_ID },
+    category: "Etiquetas NFC",
+    offers: {
+      "@type": "Offer",
+      price: TAG_PACK.amount,
+      priceCurrency: CURRENCY,
+      availability: "https://schema.org/PreOrder",
+      url: absoluteUrl("/#precios"),
+    },
+  };
+}
+
+/**
+ * Solo debe emitirse en /preguntas-frecuentes. Las demás páginas resumen y
+ * enlazan: si varias emiten el mismo FAQPage, Google no sabe cuál mostrar y
+ * puede suprimir el resultado enriquecido por duplicación.
+ */
 export function faqSchema(items: FaqItem[]) {
   return {
     "@type": "FAQPage",

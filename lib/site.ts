@@ -15,10 +15,11 @@ export const ONE_LINER =
   "Bixio es una app de inventario doméstico: pegas un tag NFC en cada caja, haces una foto del contenido y la IA cataloga lo que hay dentro, para que luego encuentres cualquier objeto buscando su nombre sin abrir ninguna caja.";
 
 /**
- * Buzón al que van los botones de "Solicitar condiciones" de /trasteros.
- * CONFIRMAR que existe antes de publicar: si no, esos leads se pierden.
+ * Buzones de contacto. CONFIRMAR que existen antes de publicar: son el destino
+ * de los formularios cuando no hay endpoint de leads configurado.
  */
 export const PARTNERS_EMAIL = "partners@bixiotag.com";
+export const HELLO_EMAIL = "hola@bixiotag.com";
 
 export const PARTNERS_MAILTO = `mailto:${PARTNERS_EMAIL}?subject=${encodeURIComponent(
   "Condiciones para trasteros",

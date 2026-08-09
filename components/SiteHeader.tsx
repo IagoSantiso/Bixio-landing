@@ -3,8 +3,10 @@ import { MAIN_NAV } from "@/lib/site";
 import { BixioMark } from "./icons";
 
 /**
- * El menú móvil es un <details> nativo: se abre y cierra sin JavaScript, es
- * accesible por teclado y no obliga a convertir la cabecera en client component.
+ * Una sola lista de navegación en el DOM: el <details> se comporta como menú
+ * desplegable en móvil y, por encima de 900 px, el CSS oculta el botón y
+ * despliega la lista en horizontal. Antes se renderizaban dos copias de los
+ * mismos enlaces y los rastreadores veían el menú duplicado.
  */
 export function SiteHeader() {
   return (
@@ -15,24 +17,16 @@ export function SiteHeader() {
           Bixio
         </Link>
 
-        <nav className="nav-links" aria-label="Principal">
-          {MAIN_NAV.map(({ href, label }) => (
-            <Link key={href} href={href}>
-              {label}
-            </Link>
-          ))}
-        </nav>
-
         <div className="nav-actions">
-          <Link className="btn btn-sm" href="/#precios">
+          <Link className="btn btn-sm" href="/lista-de-espera" data-cta="nav">
             Empezar gratis
           </Link>
 
-          <details className="nav-mobile">
+          <details className="nav-disclosure">
             <summary aria-label="Abrir menú" title="Menú">
               <span className="nav-burger" aria-hidden="true" />
             </summary>
-            <nav className="nav-mobile-panel" aria-label="Principal (móvil)">
+            <nav className="nav-links" aria-label="Principal">
               {MAIN_NAV.map(({ href, label }) => (
                 <Link key={href} href={href}>
                   {label}
