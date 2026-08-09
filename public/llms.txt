@@ -1,0 +1,54 @@
+# Bixio
+
+> Bixio es una app de inventario doméstico: pegas un tag NFC en cada caja, haces una foto del contenido y la IA cataloga lo que hay dentro, para que luego encuentres cualquier objeto buscando su nombre sin abrir ninguna caja. Sirve para mudanzas, trasteros, garajes y altillos, y tiene un programa de comisiones para negocios de self-storage.
+
+Idioma: español (España). Web: https://bixiotag.com
+
+## Qué problema resuelve
+
+Cuando guardas cosas en cajas cerradas —una mudanza, el cambio de armario, un trastero alquilado— dejas de saber qué hay en cada una. Escribir "cocina" o "varios" con rotulador no se puede buscar. Bixio convierte cada caja en algo consultable: la identificas acercando el móvil a un tag NFC, fotografías el contenido antes de cerrarla, y después buscas el objeto por su nombre.
+
+## Cómo funciona, en tres pasos
+
+1. **Pega y escanea.** Un tag NFC por caja. Acercas el móvil y la caja queda dada de alta en el inventario.
+2. **Haz una foto.** La IA reconoce los objetos de la imagen, los nombra y los agrupa por categoría. El usuario solo corrige lo que haga falta.
+3. **Encuentra al instante.** Buscas por nombre de objeto y Bixio devuelve la caja, la estantería y la ubicación.
+
+## Para quién es
+
+- **Mudanzas.** Familias con decenas de cajas idénticas que necesitan saber cuál abrir la primera noche.
+- **Ropa de temporada y altillos.** Lo que se guarda seis meses y luego no se recuerda dónde está.
+- **Trasteros, garajes y sótanos.** Espacios donde se acumula lo que no se usa a diario.
+- **Negocios de trasteros y self-storage.** Ofrecen Bixio a sus inquilinos y cobran comisión recurrente.
+
+## Precios
+
+- **Gratis**: 0 €, hasta 10 cajas, un usuario, sin tarjeta.
+- **Mudanza**: 19,99 € de pago único, 30 días de acceso completo, hasta 5 personas.
+- **Particulares**: 35 €/año, una ubicación, fotos sin caducidad.
+- **Particulares+**: 59 €/año, trastero externo más ubicación propia, objetos sueltos, cuenta compartida.
+- **Tags NFC**: 29 € el pack de 100 unidades, reutilizables, se compran aparte de la suscripción.
+
+## Programa de partners (trasteros y self-storage)
+
+- 40 % de cada suscripción mientras el cliente siga activo.
+- 20 % de cada pack de tags NFC vendido en el mostrador.
+- El trastero entrega los tags con el contrato; el inquilino organiza su box él solo.
+- El inventario y las fotos son del cliente, no del trastero.
+
+## Requisitos y límites
+
+- Hace falta un móvil capaz de leer etiquetas NFC para dar de alta las cajas acercando el teléfono.
+- El valor aparece con volumen: con pocas cosas a la vista no compensa.
+- No sustituye a un inventario contable ni a una tasación para un seguro.
+
+## Privacidad
+
+Las fotos del usuario son suyas. Bixio no las vende ni las usa para entrenar modelos.
+
+## Páginas
+
+- [Inicio](https://bixiotag.com/): qué es Bixio, cómo funciona y precios.
+- [Para tu casa](https://bixiotag.com/particulares): mudanzas, trasteros propios, garajes y ropa de temporada.
+- [Para trasteros](https://bixiotag.com/trasteros): programa de partners y comisiones para self-storage.
+- [Preguntas frecuentes](https://bixiotag.com/preguntas-frecuentes): compatibilidad, precios, tags, privacidad y casos en los que no compensa.

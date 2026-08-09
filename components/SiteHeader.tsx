@@ -1,30 +1,46 @@
+import Link from "next/link";
+import { MAIN_NAV } from "@/lib/site";
 import { BixioMark } from "./icons";
 
-const navLinks = [
-  { href: "#como", label: "Cómo funciona" },
-  { href: "#casos", label: "Para quién" },
-  { href: "#precios", label: "Precios" },
-  { href: "#partners", label: "Trasteros" },
-];
-
+/**
+ * El menú móvil es un <details> nativo: se abre y cierra sin JavaScript, es
+ * accesible por teclado y no obliga a convertir la cabecera en client component.
+ */
 export function SiteHeader() {
   return (
     <header>
       <div className="wrap nav">
-        <a className="logo" href="#">
+        <Link className="logo" href="/">
           <BixioMark />
           Bixio
-        </a>
-        <nav className="nav-links">
-          {navLinks.map(({ href, label }) => (
-            <a key={href} href={href}>
+        </Link>
+
+        <nav className="nav-links" aria-label="Principal">
+          {MAIN_NAV.map(({ href, label }) => (
+            <Link key={href} href={href}>
               {label}
-            </a>
+            </Link>
           ))}
         </nav>
-        <a className="btn btn-sm" href="#precios">
-          Empezar gratis
-        </a>
+
+        <div className="nav-actions">
+          <Link className="btn btn-sm" href="/#precios">
+            Empezar gratis
+          </Link>
+
+          <details className="nav-mobile">
+            <summary aria-label="Abrir menú" title="Menú">
+              <span className="nav-burger" aria-hidden="true" />
+            </summary>
+            <nav className="nav-mobile-panel" aria-label="Principal (móvil)">
+              {MAIN_NAV.map(({ href, label }) => (
+                <Link key={href} href={href}>
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </details>
+        </div>
       </div>
     </header>
   );

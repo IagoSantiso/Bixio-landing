@@ -1,31 +1,27 @@
+import Link from "next/link";
+import { LEGAL_NAV } from "@/lib/site";
 import { BixioMark } from "./icons";
 
 const columns = [
   {
     title: "Producto",
     links: [
-      { href: "#como", label: "Cómo funciona" },
-      { href: "#precios", label: "Precios" },
-      { href: "#", label: "Packs de tags" },
-      { href: "#", label: "Preguntas frecuentes" },
+      { href: "/#como", label: "Cómo funciona" },
+      { href: "/#precios", label: "Precios" },
+      { href: "/preguntas-frecuentes", label: "Preguntas frecuentes" },
     ],
   },
   {
-    title: "Negocio",
+    title: "Casos de uso",
     links: [
-      { href: "#partners", label: "Para trasteros" },
-      { href: "#", label: "Programa de partners" },
-      { href: "#", label: "Contacto comercial" },
+      { href: "/particulares", label: "Mudanzas y casa" },
+      { href: "/particulares#trastero", label: "Trastero y garaje" },
+      { href: "/trasteros", label: "Para trasteros" },
     ],
   },
   {
     title: "Legal",
-    links: [
-      { href: "#", label: "Aviso legal" },
-      { href: "#", label: "Privacidad" },
-      { href: "#", label: "Condiciones" },
-      { href: "#", label: "Cookies" },
-    ],
+    links: LEGAL_NAV,
   },
 ];
 
@@ -35,21 +31,21 @@ export function SiteFooter() {
       <div className="wrap">
         <div className="foot-grid">
           <div>
-            <a className="logo" href="#">
+            <Link className="logo" href="/">
               <BixioMark size={26} />
               Bixio
-            </a>
+            </Link>
             <p className="foot-about">
               Inventario doméstico con tags NFC. Guarda, olvida, encuentra.
             </p>
           </div>
           {columns.map(({ title, links }) => (
             <div key={title}>
-              <h4>{title}</h4>
+              <h2 className="foot-title">{title}</h2>
               <ul>
                 {links.map(({ href, label }) => (
                   <li key={label}>
-                    <a href={href}>{label}</a>
+                    <Link href={href}>{label}</Link>
                   </li>
                 ))}
               </ul>

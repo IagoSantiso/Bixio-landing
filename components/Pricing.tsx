@@ -1,82 +1,6 @@
+import Link from "next/link";
+import { PLANS as plans, TAG_PACK } from "@/lib/pricing";
 import { CheckIcon } from "./icons";
-
-type Plan = {
-  tagline: string;
-  name: string;
-  desc: string;
-  price: string;
-  period: string;
-  features: string[];
-  cta: string;
-  href: string;
-  featured?: boolean;
-  badge?: string;
-};
-
-const plans: Plan[] = [
-  {
-    tagline: "Para probar",
-    name: "Gratis",
-    desc: "Un armario, un trastero pequeño, o ver si esto te sirve.",
-    price: "0 €",
-    period: " / siempre",
-    features: [
-      "Hasta 10 cajas",
-      "Catalogado por foto, con cuota mensual",
-      "Búsqueda por nombre de objeto",
-      "Un usuario",
-    ],
-    cta: "Crear cuenta",
-    href: "#",
-  },
-  {
-    tagline: "Pago único",
-    name: "Mudanza",
-    desc: "Treinta días para empaquetar, mover y desempaquetar. Sin suscripción.",
-    price: "19,99 €",
-    period: " / una vez",
-    features: [
-      "30 días de acceso completo",
-      "Hasta 5 personas en la misma mudanza",
-      "Catalogado por foto sin racanear",
-      "Al acabar, pasas a anual o se borra",
-    ],
-    cta: "Activar mudanza",
-    href: "#",
-  },
-  {
-    tagline: "Anual",
-    name: "Particulares",
-    desc: "Tu casa organizada todo el año, en una sola ubicación.",
-    price: "35 €",
-    period: " / año",
-    features: [
-      "Una ubicación (casa o trastero)",
-      "Fotos guardadas sin caducidad",
-      "Búsqueda con IA y copia de seguridad",
-      "Pack de tags aparte",
-    ],
-    cta: "Elegir este plan",
-    href: "#",
-  },
-  {
-    tagline: "Anual",
-    name: "Particulares+",
-    desc: "Trastero alquilado, garaje propio y lo que hay en casa, todo junto.",
-    price: "59 €",
-    period: " / año",
-    features: [
-      "Trastero externo + ubicación propia",
-      "Objetos sueltos de casa, no solo cajas",
-      "Hasta 100 tags activables",
-      "Cuenta compartida con toda la casa",
-    ],
-    cta: "Elegir este plan",
-    href: "#",
-    featured: true,
-    badge: "Completa",
-  },
-];
 
 export function Pricing() {
   return (
@@ -119,9 +43,9 @@ export function Pricing() {
         </div>
 
         <p className="price-note">
-          Los <strong>tags NFC se compran una vez</strong> y son reutilizables: pack de 100 unidades
-          por 29 €. ¿Gestionas un negocio de trasteros? Tienes{" "}
-          <a href="#partners">licencia por unidad y comisión</a>.
+          Los <strong>tags NFC se compran una vez</strong> y son reutilizables: pack de{" "}
+          {TAG_PACK.units} unidades por {TAG_PACK.price}. ¿Gestionas un negocio de trasteros? Tienes{" "}
+          <Link href="/trasteros">licencia por unidad y comisión</Link>.
         </p>
       </div>
     </section>
