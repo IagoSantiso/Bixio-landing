@@ -45,15 +45,24 @@ el historial de git (`git show 42fa3a6:index.html`).
 
 ## Despliegue
 
-El sitio se exporta como estático (`output: "export"` en `next.config.ts`), así
-que `npm run build` deja el sitio listo en `out/`. Cloudflare despliega solo al
-detectar un commit; su configuración de build debe ser:
+El sitio vive en un Worker de Cloudflare (`bixio-landing`) que sirve solo assets
+estáticos, conectado al repo con Workers Builds: cada commit dispara un build, y
+los de `main` van a producción.
 
-| Ajuste | Valor |
-| --- | --- |
-| Build command | `npm run build` |
-| Output directory | `out` |
-| Node version | 22 |
+Toda la configuración está en `wrangler.jsonc`, no en el panel:
+
+- `build.command` ejecuta `npm run build`, que con `output: "export"` genera `out/`.
+- `assets.directory` publica esa carpeta; `not_found_handling` sirve `out/404.html`.
+
+Por eso el *Deploy command* del panel (`npx wrangler deploy`) construye y despliega
+en un solo paso, y el *Build command* puede seguir vacío.
+
+Para desplegar a mano desde local hace falta estar autenticado (`npx wrangler login`):
+
+```bash
+npm run deploy              # build + deploy
+npx wrangler deploy --dry-run   # comprueba la config sin publicar
+```
 
 ## Notas
 
