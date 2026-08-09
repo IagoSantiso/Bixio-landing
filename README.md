@@ -30,9 +30,10 @@ components/
   Hero.tsx        AiSection.tsx   Pricing.tsx   FinalCta.tsx
   icons.tsx       # logo, check, flecha, iconos de categoría
   illustrations/  # las ilustraciones SVG grandes, una por archivo
-legacy/
-  index.html      # la landing original en HTML, conservada como referencia
 ```
+
+La landing original en HTML de una sola pieza ya no está en el árbol; queda en
+el historial de git (`git show 42fa3a6:index.html`).
 
 ### Dónde tocar cada cosa
 
@@ -42,10 +43,19 @@ legacy/
 - **Colores y tipografías**: variables CSS en `:root`, al principio de `app/globals.css`.
 - **Título y metadatos**: `metadata` en `app/layout.tsx`.
 
+## Despliegue
+
+El sitio se exporta como estático (`output: "export"` en `next.config.ts`), así
+que `npm run build` deja el sitio listo en `out/`. Cloudflare despliega solo al
+detectar un commit; su configuración de build debe ser:
+
+| Ajuste | Valor |
+| --- | --- |
+| Build command | `npm run build` |
+| Output directory | `out` |
+| Node version | 22 |
+
 ## Notas
 
 - Las fuentes ya no se piden a `fonts.googleapis.com`: `next/font` las descarga en
   el build y las sirve desde el propio dominio (mejor LCP y cero CLS).
-- La página se prerenderiza como estática. Si quieres publicarla en un hosting de
-  ficheros (GitHub Pages, Netlify Drop…), descomenta `output: "export"` en
-  `next.config.ts` y `npm run build` generará la carpeta `out/`.
