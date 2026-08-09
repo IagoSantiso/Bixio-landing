@@ -107,7 +107,16 @@ export const TAG_PACK = {
   amount: 29,
 };
 
+/**
+ * Comisión POR VENTA, no por recurrencia: el partner cobra cuando entra la
+ * venta, y las renovaciones se las queda Bixio. Los porcentajes vienen de la
+ * versión anterior de la página; CONFIRMAR que siguen siendo estos ahora que
+ * no incluyen la recurrencia.
+ */
 export const PARTNER_COMMISSIONS = [
-  { num: "40 %", label: "de cada suscripción, mientras el cliente siga activo" },
-  { num: "20 %", label: "de cada pack de tags NFC que vendas en tu mostrador" },
+  { num: "40 %", label: "de cada suscripción vendida con tu enlace o tu código" },
+  { num: "20 %", label: "de cada pack de tags NFC que salga de tu recepción" },
 ];
+
+export const PARTNER_TERMS =
+  "La comisión se cobra en la venta, no en las renovaciones: cuando el cliente renueva al año siguiente, esa suscripción ya no genera comisión. A cambio no hay cuota de alta, ni exclusividad, ni objetivos mínimos.";

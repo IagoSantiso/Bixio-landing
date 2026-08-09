@@ -21,7 +21,7 @@ export const FAQ_HOME: FaqItem[] = [
   },
   {
     q: "¿Funciona en un trastero sin cobertura?",
-    a: "Un trastero en un sótano suele no tener señal, y es justo donde necesitas consultar el inventario. Comprueba en la app qué parte funciona sin conexión antes de fiarte: consultar lo ya catalogado y buscar objetos debería poder hacerse sin datos, mientras que subir fotos nuevas para que la IA las procese sí necesita conexión.",
+    a: "Sí, y es una de las razones de usar NFC. Los tags no necesitan internet: acercas el móvil a la caja y ves ahí mismo lo que hay dentro, aunque estés en un sótano sin una raya de señal. Y si vas a catalogar, también puedes hacerlo sin conexión: escaneas y fotografías todo lo que quieras, se guarda en el móvil, y cuando sales y recuperas cobertura se sincroniza solo.",
   },
   {
     q: "¿Cuánto cuesta Bixio?",
@@ -66,7 +66,7 @@ export const FAQ_ALL: FaqItem[] = [
   },
   {
     q: "Tengo un negocio de trasteros, ¿puedo ofrecer Bixio a mis clientes?",
-    a: "Sí, hay un programa de partners para trasteros y self-storage: entregas un pack de tags con el contrato de alquiler y cobras el 40 % de cada suscripción mientras el cliente siga activo, más el 20 % de cada pack de tags que vendas en tu mostrador.",
+    a: "Sí, hay un programa de partners para trasteros y self-storage. Recibes un enlace y un código propios y los pones donde quieras: en el contrato de alquiler, en un expositor en recepción o en una pegatina en la puerta de cada box. De cada venta que entre con tu enlace o tu código cobras el 40 % de la suscripción y el 20 % del pack de tags.",
   },
   {
     q: "¿Cuándo NO te compensa Bixio?",
@@ -93,19 +93,27 @@ export const FAQ_PARTICULARES: FaqItem[] = [
 /** Específicas de negocio. */
 export const FAQ_TRASTEROS: FaqItem[] = [
   {
-    q: "¿Cuánto cobra un trastero por ofrecer Bixio?",
-    a: "El programa de partners de Bixio paga al trastero el 40 % de cada suscripción mientras el cliente siga activo, y el 20 % de cada pack de tags NFC vendido en el mostrador. Es ingreso recurrente que se suma al alquiler del box, sin coste de instalación.",
+    q: "¿Qué es exactamente Bixio?",
+    a: "Bixio es una app de inventario para quien guarda cosas en cajas. El inquilino pega un tag NFC en cada caja, hace una foto del contenido y la IA escribe la lista de lo que hay dentro; después encuentra cualquier objeto buscando su nombre, y acercando el móvil a una caja ve qué contiene sin abrirla. Para un trastero es un producto que se vende en recepción, no un software que haya que instalar.",
   },
   {
-    q: "¿Qué tengo que hacer para empezar?",
-    a: "Entregar un pack de tags junto con el contrato de alquiler. El cliente organiza su trastero él solo desde su móvil; el trastero no tiene que catalogar nada ni tocar las cosas del inquilino.",
+    q: "¿Cuánto cobra un trastero por vender Bixio?",
+    a: "El 40 % de cada suscripción vendida con tu enlace o tu código, y el 20 % de cada pack de tags NFC. La comisión se cobra en la venta: las renovaciones posteriores no generan comisión. No hay cuota de alta ni objetivos mínimos.",
   },
   {
-    q: "¿Esto reduce las llamadas de clientes?",
-    a: "Ese es el objetivo: el inquilino que sabe qué guardó y en qué caja deja de llamar al trastero para preguntarlo. Es la fricción que ataca Bixio, y cada llamada que no entra es tiempo de mostrador que recuperas.",
+    q: "¿Cuánto trabajo me da esto?",
+    a: "El que tú quieras darle. Recibes un enlace y un código de partner y eliges dónde ponerlos: incluirlo en el contrato de alquiler, tener un expositor en la entrada, pegar una pegatina con el código en la puerta de cada box o mandarlo por email a tus clientes. Se parece más a vender una tarjeta regalo en un kiosco que a montar un servicio nuevo.",
+  },
+  {
+    q: "¿Tengo que tener stock de tags?",
+    a: "No es obligatorio. Puedes tener packs en recepción y venderlos en el mostrador, o no tener ninguno y dejar que Bixio se los envíe al cliente. En los dos casos, si la compra entra con tu enlace o tu código, la comisión es tuya.",
+  },
+  {
+    q: "¿Y si mis inquilinos no son muy de apps?",
+    a: "No todos lo usarán, y no pasa nada: el que no lo quiera sigue alquilando su box igual. Bixio es un extra que vendes a quien le interese, no un requisito que impongas a toda tu cartera.",
   },
   {
     q: "¿Tengo acceso a los datos de mis inquilinos?",
-    a: "No. El inventario es del cliente y sus fotos son suyas. El trastero ve su panel de partner con lo suyo: ingresos del mes, clientes activos y packs vendidos.",
+    a: "No. El inventario es del cliente y sus fotos son suyas. Tú ves tu panel de partner con lo tuyo: ventas del mes, comisiones y packs vendidos.",
   },
 ];

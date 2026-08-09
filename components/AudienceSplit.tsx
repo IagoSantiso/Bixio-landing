@@ -12,7 +12,7 @@ const audiences = [
     href: "/trasteros",
     eyebrow: "Para tu negocio",
     title: "Gestiono trasteros o self-storage",
-    text: "Entregas los tags con el contrato, tus inquilinos dejan de llamarte para preguntar qué guardaron y cobras comisión de cada suscripción activa.",
+    text: "Un producto más que vender en recepción. Pones tu enlace y tu código donde quieras y cobras comisión de cada venta, sin dar soporte ni gestionar nada.",
     cta: "Ver el programa de partners",
   },
 ];

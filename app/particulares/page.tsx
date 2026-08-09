@@ -5,6 +5,7 @@ import { CtaBand } from "@/components/CtaBand";
 import { Faq } from "@/components/Faq";
 import { HowItWorks } from "@/components/HowItWorks";
 import { JsonLd } from "@/components/JsonLd";
+import { OfflineSection } from "@/components/OfflineSection";
 import { Pricing } from "@/components/Pricing";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -144,6 +145,8 @@ export default function ParticularesPage() {
         </section>
 
         <HowItWorks />
+
+        <OfflineSection />
 
         <section className="casos" id="situaciones">
           <div className="wrap">

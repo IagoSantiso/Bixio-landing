@@ -31,10 +31,17 @@ Cuando guardas cosas en cajas cerradas —una mudanza, el cambio de armario, un 
 
 ## Programa de partners (trasteros y self-storage)
 
-- 40 % de cada suscripción mientras el cliente siga activo.
-- 20 % de cada pack de tags NFC vendido en el mostrador.
-- El trastero entrega los tags con el contrato; el inquilino organiza su box él solo.
-- El inventario y las fotos son del cliente, no del trastero.
+- El partner recibe un enlace y un código propios y los coloca donde quiera: en el contrato de alquiler, en un expositor de recepción, en pegatinas en la puerta de cada box o en un email a sus clientes.
+- 40 % de cada suscripción vendida con ese enlace o código.
+- 20 % de cada pack de tags NFC vendido igual.
+- La comisión se cobra en la venta, no en las renovaciones. Sin cuota de alta, sin exclusividad y sin objetivos mínimos.
+- Los tags puede tenerlos el partner en recepción o enviarlos Bixio directamente al cliente; la comisión es del partner en ambos casos.
+- El partner no gestiona el servicio ni da soporte, y no accede al inventario ni a las fotos de sus inquilinos.
+- Para el trastero es ingreso adicional sobre el mismo cliente y un motivo más de permanencia, no una herramienta de gestión que deba operar.
+
+## Funciona sin cobertura
+
+Los tags NFC no necesitan internet: acercando el móvil a una caja se ve su contenido en el sitio, aunque el trastero esté en un sótano sin señal. El catalogado también funciona sin conexión —se escanea y se fotografía todo, y queda guardado en el móvil— y se sincroniza solo al recuperar cobertura.
 
 ## Requisitos y límites
 

@@ -21,7 +21,7 @@ const useCases = [
     illustration: <StorageBusinessIllustration />,
     tag: "Negocio",
     title: "Trasteros que quieren fidelizar",
-    text: "Ofreces Bixio a tus inquilinos, ellos dejan de llamarte para preguntar qué guardaron, y tú cobras comisión cada mes.",
+    text: "Ofreces Bixio a tus inquilinos con tu código de partner: ellos organizan su box y tú te llevas comisión de cada venta, sin gestionar nada.",
   },
 ];
 
