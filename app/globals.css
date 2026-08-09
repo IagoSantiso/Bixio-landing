@@ -51,7 +51,7 @@ section{padding:88px 0}
 
 /* ---------- nav ---------- */
 header{position:sticky;top:0;z-index:50;background:rgba(255,248,243,.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(45,42,50,.08)}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0;position:relative}
 .logo{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:600;font-size:24px}
 .nav-links{display:flex;gap:30px;font-size:15px;font-weight:600;color:var(--muted)}
 .nav-links a:hover{color:var(--carbon)}
@@ -389,9 +389,12 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
   .plan-desc{min-height:0}
   .paso-arrow{display:none}
   .nav-disclosure>summary{display:grid}
+  /* El panel se ancla a la barra, no al <details>: el botón está a la
+     izquierda del CTA y con right:0 sobre él el menú se salía de la pantalla. */
+  .nav-disclosure{position:static}
   .nav-disclosure>.nav-links{
-    position:absolute;right:0;top:calc(100% + 10px);z-index:60;
-    flex-direction:column;gap:0;min-width:236px;padding:10px;
+    position:absolute;top:calc(100% + 10px);right:0;left:0;z-index:60;
+    flex-direction:column;gap:0;padding:10px;
     background:var(--crema);border:2px solid var(--carbon);border-radius:18px;
     box-shadow:5px 5px 0 rgba(45,42,50,.16);
   }
@@ -547,6 +550,10 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
 .calc-capture>p{color:var(--muted);margin:8px 0 22px}
 
 @media(max-width:900px){
-  .preview-grid,.trust-grid,.calc-inputs,.calc-results{grid-template-columns:1fr}
+  .trust-grid,.calc-inputs,.calc-results{grid-template-columns:1fr}
+  /* Se mantienen los tres en fila: son una secuencia y en una sola columna
+     cada mockup se estiraba a todo el ancho. */
+  .preview-grid{grid-template-columns:repeat(3,1fr);gap:12px}
+  .preview-item figcaption{margin-top:10px;font-size:13px;line-height:1.25}
   .partners-banner-inner{align-items:flex-start}
 }
