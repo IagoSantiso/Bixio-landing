@@ -1,0 +1,17 @@
+# dependencias
+/node_modules
+
+# build
+/.next
+/out
+/.wrangler
+next-env.d.ts
+*.tsbuildinfo
+
+# entorno
+.env*
+!.env.example
+
+# varios
+.DS_Store
+*.log

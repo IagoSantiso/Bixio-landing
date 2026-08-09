@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bixio-landing",
+  "compatibility_date": "2026-08-09",
+
+  // Cloudflare tiene el "Build command" vacío y despliega con
+  // `npx wrangler deploy`; este hook hace que el propio deploy genere out/.
+  "build": {
+    "command": "npm run build"
+  },
+
+  // Worker de solo assets: no hay código de servidor, únicamente el export
+  // estático que genera `npm run build` (output: "export" en next.config.ts).
+  "assets": {
+    "directory": "./out",
+    // Next genera out/404.html; Cloudflare lo sirve en rutas desconocidas.
+    "not_found_handling": "404-page"
+  }
+}
