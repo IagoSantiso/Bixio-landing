@@ -1,10 +1,22 @@
 import {
   MovingIllustration,
-  StorageBusinessIllustration,
+  PackingIllustration,
   WardrobeIllustration,
 } from "./illustrations/UseCaseIllustrations";
 
+/**
+ * Solo particulares. La tercera tarjeta hablaba de negocios que revenden el
+ * pack, y eso no pinta nada en la home: quien llega aquí viene a organizar su
+ * casa. Las tres van ahora en el orden en que ocurren — empaquetar, llegar,
+ * guardar la temporada.
+ */
 const useCases = [
+  {
+    illustration: <PackingIllustration />,
+    tag: "Embalaje",
+    title: "El día que metes la casa en cajas",
+    text: "Tres días para empaquetar diez años de cosas. Catalogas cada caja antes de cerrarla y no vuelves a abrirla para comprobar qué había dentro.",
+  },
   {
     illustration: <MovingIllustration />,
     tag: "Mudanza",
@@ -16,12 +28,6 @@ const useCases = [
     tag: "Temporada",
     title: "Parejas y cambio de armario",
     text: "Guardas el invierno en dos cajas y en octubre te acuerdas de que existían, pero no de dónde.",
-  },
-  {
-    illustration: <StorageBusinessIllustration />,
-    tag: "Negocio",
-    title: "Negocios que viven de las cajas",
-    text: "Papelerías, embalaje, trasteros, mudanzas. Lo venden en el mostrador o se lo recomiendan a sus clientes, y cobran por ello.",
   },
 ];
 

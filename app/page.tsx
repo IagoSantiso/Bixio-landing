@@ -2,7 +2,6 @@ import { AiSection } from "@/components/AiSection";
 import { FinalCta } from "@/components/FinalCta";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
-import { Partners } from "@/components/Partners";
 import { Pricing } from "@/components/Pricing";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -17,7 +16,6 @@ export default function HomePage() {
       <AiSection />
       <UseCases />
       <Pricing />
-      <Partners />
       <FinalCta />
       <SiteFooter />
     </>

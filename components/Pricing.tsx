@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CheckIcon } from "./icons";
 
 type Plan = {
@@ -121,9 +120,7 @@ export function Pricing() {
 
         <p className="price-note">
           Los <strong>tags NFC se compran una vez</strong> y son reutilizables: pack de 100 unidades
-          por 29 €. ¿Tienes un negocio? Puedes{" "}
-          <Link href="/comercios">venderlo en tu mostrador</Link> o{" "}
-          <Link href="/recomienda">recomendarlo y cobrar comisión</Link>.
+          por 29 €.
         </p>
       </div>
     </section>

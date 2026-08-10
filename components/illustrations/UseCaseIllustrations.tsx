@@ -62,42 +62,37 @@ export function WardrobeIllustration() {
   );
 }
 
-export function StorageBusinessIllustration() {
+export function PackingIllustration() {
   return (
-    <svg viewBox="0 0 260 140" role="img" aria-label="Dueño de trastero gestionando su negocio">
+    <svg viewBox="0 0 260 140" role="img" aria-label="Cajas de mudanza etiquetadas antes de cerrarlas">
       <ellipse cx="130" cy="128" rx="96" ry="9" fill="#FF7A5C" opacity=".14" />
-      {/* estanterías */}
-      <rect x="18" y="24" width="106" height="98" rx="6" fill="#FFF8F3" stroke="#2D2A32" strokeWidth="2.5" />
-      <path d="M18 58h106M18 90h106" stroke="#2D2A32" strokeWidth="2.2" />
-      <rect x="28" y="34" width="30" height="20" rx="4" fill="#FF7A5C" stroke="#2D2A32" strokeWidth="2" />
-      <rect x="66" y="34" width="30" height="20" rx="4" fill="#FFC857" stroke="#2D2A32" strokeWidth="2" />
-      <rect x="28" y="66" width="30" height="20" rx="4" fill="#FFC857" stroke="#2D2A32" strokeWidth="2" />
-      <rect x="66" y="66" width="46" height="20" rx="4" fill="#FF7A5C" stroke="#2D2A32" strokeWidth="2" />
-      <rect x="28" y="98" width="46" height="20" rx="4" fill="#FF7A5C" stroke="#2D2A32" strokeWidth="2" />
-      {/* persona con portátil */}
-      <circle cx="186" cy="44" r="14" fill="#FFC857" stroke="#2D2A32" strokeWidth="2.5" />
+      {/* torre de cajas ya cerradas, la de abajo con su tag puesto */}
+      <rect x="40" y="40" width="54" height="32" rx="5" fill="#FFC857" stroke="#2D2A32" strokeWidth="2.5" />
+      <path d="M40 54h54" stroke="#2D2A32" strokeWidth="2.2" opacity=".45" />
+      <rect x="28" y="72" width="78" height="50" rx="6" fill="#FF7A5C" stroke="#2D2A32" strokeWidth="2.5" />
+      <path d="M28 88h78" stroke="#2D2A32" strokeWidth="2.2" opacity=".45" />
+      <g transform="translate(67 104)">
+        <circle r="10" fill="#FFF8F3" stroke="#2D2A32" strokeWidth="2.5" />
+        <circle r="2.2" fill="#2D2A32" />
+        <path
+          d="M3.8 -3.4a5.4 5.4 0 0 1 0 6.8"
+          stroke="#2D2A32"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </g>
+      {/* la siguiente, todavía abierta */}
       <path
-        d="M171 104V80a15 15 0 0 1 30 0v24"
+        d="M148 76h84v40a6 6 0 0 1-6 6h-72a6 6 0 0 1-6-6V76Z"
         fill="#FFF8F3"
         stroke="#2D2A32"
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
-      <path
-        d="M158 122h60l-8-22h-44l-8 22Z"
-        fill="#FFF8F3"
-        stroke="#2D2A32"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M228 76l8-12 8 8 8-14"
-        stroke="#FF7A5C"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
+      <path d="M148 76l-14-16 20-7 12 23h-18Z" fill="#FFC857" stroke="#2D2A32" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M232 76l14-16-20-7-12 23h18Z" fill="#FFC857" stroke="#2D2A32" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M166 96h48M166 106h30" stroke="#2D2A32" strokeWidth="2.4" strokeLinecap="round" opacity=".35" />
     </svg>
   );
 }
