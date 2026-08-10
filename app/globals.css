@@ -234,15 +234,52 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
    que no tenía equivalente: submenú, chips, acordeón y formulario.
    ========================================================= */
 
-/* submenú "Para negocios" del header */
+/* ---------- navegación: desplegable y hamburguesa ---------- */
+.nav{position:relative}
+.nav-links{align-items:center}
+.nav-right{display:flex;align-items:center;gap:12px}
+
+/* "Para negocios": abre al pulsar, no al pasar por encima. Con hover no había
+   forma de abrirlo desde una pantalla táctil. */
 .nav-group{position:relative;display:inline-flex}
-.nav-menu{
-  position:absolute;top:100%;left:-14px;min-width:180px;
-  display:none;flex-direction:column;gap:10px;
-  background:var(--crema);border:2px solid var(--carbon);border-radius:16px;
-  box-shadow:4px 4px 0 rgba(45,42,50,.14);padding:14px;margin-top:10px;
+.nav-trigger{
+  font-family:inherit;font-size:15px;font-weight:600;color:var(--muted);
+  background:none;border:0;padding:0;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
 }
-.nav-group:hover .nav-menu,.nav-group:focus-within .nav-menu{display:flex}
+.nav-trigger:hover,.nav-trigger[aria-expanded="true"]{color:var(--carbon)}
+.nav-caret{transition:transform .16s ease}
+.nav-caret-up{transform:rotate(180deg)}
+.nav-menu{
+  position:absolute;top:100%;left:-16px;min-width:190px;z-index:60;
+  display:flex;flex-direction:column;gap:12px;
+  background:var(--crema);border:2px solid var(--carbon);border-radius:16px;
+  box-shadow:4px 4px 0 rgba(45,42,50,.14);padding:16px;margin-top:12px;
+}
+.nav-menu[hidden]{display:none}
+.nav-menu a{font-weight:600;color:var(--muted)}
+.nav-menu a:hover{color:var(--coral-deep)}
+
+.nav-burger{
+  display:none;align-items:center;justify-content:center;
+  width:44px;height:40px;border:2px solid var(--carbon);border-radius:12px;
+  background:var(--crema);color:var(--carbon);cursor:pointer;
+}
+.nav-burger:hover{background:var(--crema-2)}
+
+.nav-drawer{
+  position:absolute;top:calc(100% + 14px);left:0;right:0;z-index:60;
+  flex-direction:column;gap:16px;
+  background:var(--crema);border:2px solid var(--carbon);border-radius:20px;
+  box-shadow:5px 5px 0 rgba(45,42,50,.14);padding:22px 24px;
+  font-size:17px;font-weight:600;
+}
+.nav-drawer[hidden]{display:none}
+.nav-drawer-head{
+  font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--coral-deep);margin-top:6px;
+}
+.nav-drawer-sub{padding-left:14px;border-left:2px solid rgba(45,42,50,.15)}
 
 /* hero sin ilustración: el número tiene que caber en la primera pantalla */
 .hero-comercial{padding:56px 0 64px}
@@ -346,6 +383,10 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
 .btn-on-dark:hover{background:rgba(255,248,243,.1)}
 
 @media(max-width:900px){
+  /* .nav-links ya está oculto arriba: aquí entra la hamburguesa en su lugar. */
+  .nav-burger{display:inline-flex}
+  .nav-drawer{display:flex}
+
   .explica .ia-grid{grid-template-columns:1fr}
   .pasos-grid.pasos-4{grid-template-columns:1fr 1fr}
   .pasos-4 .paso-arrow{display:none}
@@ -367,4 +408,10 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
   .metric-band .com .num{font-size:26px}
   .metric-band .com .lbl{font-size:11.5px;line-height:1.35;margin-top:4px}
   .metric-note{margin-top:18px;font-size:15px}
+}
+
+/* El cajón es solo del móvil: si alguien lo abre y ensancha la ventana, no
+   puede quedarse flotando sobre la barra de enlaces. */
+@media(min-width:901px){
+  .nav-drawer{display:none}
 }
