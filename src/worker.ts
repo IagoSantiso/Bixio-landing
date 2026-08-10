@@ -132,11 +132,23 @@ function sitemap(origin: string) {
   );
 }
 
+/**
+ * Todo abierto, sin excepciones.
+ *
+ * /comercios y /recomienda no están en el menú del header, pero eso es una
+ * decisión de navegación, no de indexación: son URLs públicas y queremos que
+ * se encuentren. Los tres rastreadores de IA van con grupo propio y explícito
+ * porque un bot que coincide con un `User-agent` concreto ignora el bloque
+ * `*`, y así nadie los deja fuera sin querer al tocar este archivo.
+ */
 function robots(origin: string) {
-  return new Response(
-    `User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`,
-    { headers: { "Content-Type": "text/plain", "Cache-Control": "max-age=3600" } },
-  );
+  const groups = ["*", "GPTBot", "ClaudeBot", "PerplexityBot"]
+    .map((agent) => `User-agent: ${agent}\nAllow: /\n`)
+    .join("\n");
+
+  return new Response(`${groups}\nSitemap: ${origin}/sitemap.xml\n`, {
+    headers: { "Content-Type": "text/plain", "Cache-Control": "max-age=3600" },
+  });
 }
 
 export default {

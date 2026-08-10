@@ -50,6 +50,14 @@ las reglas que siguen y que conviene no romper al editarlas:
   quita la navegación de consumidor y el "Empezar gratis".
 - Las dos se indexan y están en el sitemap. Son captación orgánica, no solo
   destino de email.
+- **No están en el menú del header, y es a propósito.** El menú persistente
+  solo lleva secciones de particulares: a quien viene a organizar su casa no se
+  le ofrece un camino de negocio. Se llega a ellas desde la columna "Para
+  negocios" del footer, desde el bloque b2b de la home, desde el enlace del
+  bloque de precios y desde un buscador. Es una decisión de navegación, no de
+  indexación: siguen siendo URLs públicas, sin `noindex` ni ningún tipo de
+  puerta, y `robots.txt` da permiso explícito a GPTBot, ClaudeBot y
+  PerplexityBot además del `*`.
 
 Todo el contenido está en arrays al principio de cada `page.tsx`, salvo lo que
 comparten las dos, que vive en `components/commercial/data.ts`: los tipos de

@@ -3,15 +3,15 @@ import { BixioMark } from "./icons";
 import { SiteNav } from "./SiteNav";
 import { TrackedCta } from "./commercial/TrackedCta";
 
+/**
+ * Solo secciones de particulares. Las páginas comerciales no van en el menú
+ * persistente: se llega a ellas desde el footer, desde el bloque "Para
+ * negocios" de la home y desde un buscador. Siguen siendo públicas.
+ */
 const navLinks = [
   { href: "/#como", label: "Cómo funciona" },
   { href: "/#casos", label: "Para quién" },
   { href: "/#precios", label: "Precios" },
-];
-
-const businessLinks = [
-  { href: "/comercios", label: "Comercios" },
-  { href: "/recomienda", label: "Recomienda" },
 ];
 
 type Props = {
@@ -35,11 +35,7 @@ export function SiteHeader({ variant = "home", cta }: Props) {
         </Link>
 
         {variant === "home" ? (
-          <SiteNav
-            links={navLinks}
-            businessLinks={businessLinks}
-            cta={{ href: "/#precios", label: "Empezar gratis" }}
-          />
+          <SiteNav links={navLinks} cta={{ href: "/#precios", label: "Empezar gratis" }} />
         ) : (
           cta && (
             <TrackedCta className="btn btn-sm" href={cta.href} location="cabecera">

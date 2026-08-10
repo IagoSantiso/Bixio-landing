@@ -12,11 +12,12 @@ const columns = [
     ],
   },
   {
+    // Única presencia permanente de las páginas comerciales en la navegación:
+    // fuera del menú del header, disponibles aquí para quien las busque.
     title: "Para negocios",
     links: [
-      { href: "/comercios", label: "Vender en tu tienda" },
-      { href: "/recomienda", label: "Recomendarlo a tus clientes" },
-      { href: "#", label: "Contacto comercial" },
+      { href: "/comercios", label: "Comercios" },
+      { href: "/recomienda", label: "Recomienda" },
     ],
   },
   {
