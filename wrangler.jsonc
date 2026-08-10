@@ -9,11 +9,42 @@
     "command": "npm run build"
   },
 
-  // Worker de solo assets: no hay código de servidor, únicamente el export
-  // estático que genera `npm run build` (output: "export" en next.config.ts).
+  // El sitio sigue siendo el export estático de Next. El Worker existe solo
+  // para las cuatro rutas de `run_worker_first`: el resto de peticiones ni
+  // llegan a ejecutarlo, las sirve directamente el binding de assets.
+  "main": "./src/worker.ts",
+
   "assets": {
     "directory": "./out",
+    "binding": "ASSETS",
     // Next genera out/404.html; Cloudflare lo sirve en rutas desconocidas.
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/trasteros", "/sitemap.xml", "/robots.txt"]
+  },
+
+  "observability": {
+    "enabled": true
   }
+
+  // ---------------------------------------------------------------------
+  // TODO(d1): leads de /comercios y /recomienda.
+  //
+  //   npx wrangler d1 create bixio-leads
+  //
+  // Pega el `database_id` que devuelve, descomenta este bloque y aplica la
+  // migración:
+  //
+  //   npx wrangler d1 migrations apply bixio-leads --remote
+  //
+  // Hasta entonces el endpoint responde OK y vuelca cada lead a Workers Logs
+  // (observability está activado arriba), así que no se pierde ninguno.
+  //
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "bixio-leads",
+  //     "database_id": "<pegar aquí>",
+  //     "migrations_dir": "./migrations"
+  //   }
+  // ]
 }

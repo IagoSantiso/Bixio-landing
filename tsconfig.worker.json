@@ -1,0 +1,14 @@
+{
+  // El Worker se compila con esbuild (wrangler), no con Next: necesita los
+  // tipos de Cloudflare y no puede compartir el `lib.dom` del front, porque
+  // Request/Response no son los mismos tipos.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"],
+    "plugins": [],
+    "incremental": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

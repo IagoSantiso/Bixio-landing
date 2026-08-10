@@ -1,20 +1,21 @@
+import Link from "next/link";
 import { BixioMark } from "./icons";
 
 const columns = [
   {
     title: "Producto",
     links: [
-      { href: "#como", label: "Cómo funciona" },
-      { href: "#precios", label: "Precios" },
+      { href: "/#como", label: "Cómo funciona" },
+      { href: "/#precios", label: "Precios" },
       { href: "#", label: "Packs de tags" },
       { href: "#", label: "Preguntas frecuentes" },
     ],
   },
   {
-    title: "Negocio",
+    title: "Para negocios",
     links: [
-      { href: "#partners", label: "Para trasteros" },
-      { href: "#", label: "Programa de partners" },
+      { href: "/comercios", label: "Vender en tu tienda" },
+      { href: "/recomienda", label: "Recomendarlo a tus clientes" },
       { href: "#", label: "Contacto comercial" },
     ],
   },
@@ -35,10 +36,10 @@ export function SiteFooter() {
       <div className="wrap">
         <div className="foot-grid">
           <div>
-            <a className="logo" href="#">
+            <Link className="logo" href="/">
               <BixioMark size={26} />
               Bixio
-            </a>
+            </Link>
             <p className="foot-about">
               Inventario doméstico con tags NFC. Guarda, olvida, encuentra.
             </p>
@@ -49,7 +50,7 @@ export function SiteFooter() {
               <ul>
                 {links.map(({ href, label }) => (
                   <li key={label}>
-                    <a href={href}>{label}</a>
+                    {href === "#" ? <a href={href}>{label}</a> : <Link href={href}>{label}</Link>}
                   </li>
                 ))}
               </ul>

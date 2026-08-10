@@ -20,8 +20,8 @@ const useCases = [
   {
     illustration: <StorageBusinessIllustration />,
     tag: "Negocio",
-    title: "Trasteros que quieren fidelizar",
-    text: "Ofreces Bixio a tus inquilinos, ellos dejan de llamarte para preguntar qué guardaron, y tú cobras comisión cada mes.",
+    title: "Negocios que viven de las cajas",
+    text: "Papelerías, embalaje, trasteros, mudanzas. Lo venden en el mostrador o se lo recomiendan a sus clientes, y cobran por ello.",
   },
 ];
 
