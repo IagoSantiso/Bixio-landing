@@ -1,24 +1,27 @@
 /**
  * Router de /admin.
  *
- * Regla única: todo lo que cuelgue de /admin exige sesión válida, salvo la
- * propia pantalla de login. La comprobación está aquí arriba y no en cada
- * pantalla, para que añadir una ruta nueva no pueda dejarla abierta por olvido.
+ * Regla única: todo lo que cuelgue de /admin exige sesión válida, salvo
+ * `/admin/setup` (crear la cuenta, solo si no existe ninguna) y
+ * `/admin/login`. La comprobación está aquí arriba y no en cada pantalla,
+ * para que añadir una ruta nueva no pueda dejarla abierta por olvido.
  */
 
 import type { Env } from "../env";
 import {
   clearCookie,
+  createAdmin,
   csrfOk,
   csrfToken,
+  getAdmin,
   loginBlocked,
   loginFailed,
   loginSucceeded,
-  readConfig,
   readSession,
   sessionCookie,
+  updateAdmin,
   verifyPassword,
-  type AdminConfig,
+  type Admin,
   type Session,
 } from "./auth";
 import { csvResponse } from "./csv";
@@ -34,7 +37,15 @@ import {
   updateLead,
   type Estado,
 } from "./queries";
-import { detailPage, errorPage, listPage, loginPage, setupPage, sinBasePage } from "./views";
+import {
+  accountPage,
+  detailPage,
+  errorPage,
+  listPage,
+  loginPage,
+  setupPage,
+  sinBasePage,
+} from "./views";
 
 function redirect(location: string, extraHeaders: Record<string, string> = {}): Response {
   return new Response(null, {
@@ -74,15 +85,30 @@ export async function handleAdmin(request: Request, env: Env, url: URL, path: st
 }
 
 async function route(request: Request, env: Env, url: URL, path: string): Promise<Response> {
-  const config = readConfig(env);
-  if (!config) return setupPage();
+  // La cuenta del panel vive en D1: sin binding no hay ni leads que ver ni
+  // dónde guardarla, así que esto va antes que cualquier otra cosa.
+  if (!env.DB) return sinBasePage();
+  const db = env.DB;
 
-  const session = await readSession(request, config);
+  const admin = await getAdmin(db);
+
+  if (path === "/admin/setup") {
+    // Ya hay cuenta: crear una segunda no tiene sentido con un solo acceso.
+    if (admin) return redirect("/admin/login");
+    return request.method === "POST" ? doSetup(request, db) : setupPage();
+  }
+
+  if (!admin) {
+    // Sin cuenta todavía, todo lo demás manda a crearla primero.
+    return redirect("/admin/setup");
+  }
+
+  const session = await readSession(request, admin);
 
   if (path === "/admin/login") {
     // Con sesión abierta, el login no pinta nada.
     if (session) return redirect("/admin");
-    return request.method === "POST" ? doLogin(request, config) : loginPage();
+    return request.method === "POST" ? doLogin(request, admin) : loginPage();
   }
 
   if (!session) {
@@ -95,30 +121,52 @@ async function route(request: Request, env: Env, url: URL, path: string): Promis
   if (path === "/admin/logout") {
     if (request.method !== "POST") return redirect("/admin");
     const form = await readForm(request);
-    if (!(await csrfOk(config, session, form.get("csrf")))) return redirect("/admin");
+    if (!(await csrfOk(admin, session, form.get("csrf")))) return redirect("/admin");
     return redirect("/admin/login", { "Set-Cookie": clearCookie() });
   }
 
-  // A partir de aquí hace falta la base de datos.
-  if (!env.DB) return sinBasePage();
+  if (path === "/admin/cuenta") {
+    return request.method === "POST"
+      ? saveAccountView(request, db, admin, session)
+      : accountView(admin, session, url);
+  }
 
-  if (path === "/admin") return listView(env.DB, config, session, url);
-  if (path === "/admin/export.csv") return exportView(env.DB, url);
+  if (path === "/admin") return listView(db, admin, session, url);
+  if (path === "/admin/export.csv") return exportView(db, url);
 
   const detalle = /^\/admin\/lead\/(\d+)$/.exec(path);
   if (detalle) {
     const id = Number(detalle[1]);
     return request.method === "POST"
-      ? saveLeadView(request, env.DB, config, session, url, id)
-      : detailView(env.DB, config, session, url, id);
+      ? saveLeadView(request, db, admin, session, url, id)
+      : detailView(db, admin, session, url, id);
   }
 
   return redirect("/admin");
 }
 
+// ----------------------------------------------------------------- setup
+
+async function doSetup(request: Request, db: D1Database): Promise<Response> {
+  const form = await readForm(request);
+  const email = String(form.get("email") ?? "").trim();
+  const password = String(form.get("password") ?? "");
+
+  if (!email || !password) {
+    return setupPage("Hace falta un email y una contraseña.");
+  }
+
+  await createAdmin(db, email, password);
+  const admin = await getAdmin(db);
+  // No puede pasar (acaba de crearse), pero si pasa, mejor al login que un 500.
+  if (!admin) return redirect("/admin/login");
+
+  return redirect("/admin", { "Set-Cookie": await sessionCookie(admin) });
+}
+
 // ----------------------------------------------------------------- login
 
-async function doLogin(request: Request, config: AdminConfig): Promise<Response> {
+async function doLogin(request: Request, admin: Admin): Promise<Response> {
   const ip = clientIp(request);
   if (loginBlocked(ip)) {
     return loginPage("Demasiados intentos. Espera unos minutos y vuelve a probar.");
@@ -130,8 +178,8 @@ async function doLogin(request: Request, config: AdminConfig): Promise<Response>
 
   // El email se comprueba, pero el mensaje de error es el mismo que si falla
   // la contraseña: no hay nada que ganar confirmando cuál de los dos es.
-  const emailOk = email.toLowerCase() === config.email.toLowerCase();
-  const passwordOk = await verifyPassword(config.passwordHash, password);
+  const emailOk = email.toLowerCase() === admin.email.toLowerCase();
+  const passwordOk = await verifyPassword(admin.passwordHash, password);
 
   if (!emailOk || !passwordOk) {
     loginFailed(ip);
@@ -139,24 +187,64 @@ async function doLogin(request: Request, config: AdminConfig): Promise<Response>
   }
 
   loginSucceeded(ip);
-  return redirect("/admin", { "Set-Cookie": await sessionCookie(config) });
+  return redirect("/admin", { "Set-Cookie": await sessionCookie(admin) });
+}
+
+// ---------------------------------------------------------------- cuenta
+
+async function accountView(admin: Admin, session: Session, url: URL): Promise<Response> {
+  const csrf = await csrfToken(admin, session);
+  return accountPage(admin.email, csrf, url.searchParams.get("ok") === "1");
+}
+
+async function saveAccountView(
+  request: Request,
+  db: D1Database,
+  admin: Admin,
+  session: Session,
+): Promise<Response> {
+  const form = await readForm(request);
+  const csrf = await csrfToken(admin, session);
+  if (!(await csrfOk(admin, session, form.get("csrf")))) {
+    return accountPage(admin.email, csrf, false, "No se pudo verificar el formulario. Vuelve a intentarlo.");
+  }
+
+  const email = String(form.get("email") ?? "").trim();
+  const passwordActual = String(form.get("password_actual") ?? "");
+  const passwordNueva = String(form.get("password_nueva") ?? "");
+  const passwordRepite = String(form.get("password_repite") ?? "");
+
+  const fallo = (mensaje: string) => accountPage(email || admin.email, csrf, false, mensaje);
+
+  if (!email) return fallo("El email no puede quedar vacío.");
+  // La contraseña actual se exige siempre, cambie o no el email: evita que
+  // una sesión abierta en un ordenador ajeno se pueda usar para tomar la
+  // cuenta sin saber la contraseña.
+  if (!(await verifyPassword(admin.passwordHash, passwordActual))) {
+    return fallo("La contraseña actual no es correcta.");
+  }
+  if (passwordNueva && passwordNueva !== passwordRepite) {
+    return fallo("La nueva contraseña no coincide en los dos campos.");
+  }
+
+  const updated = await updateAdmin(db, { email, password: passwordNueva || undefined });
+
+  // `updateAdmin` rota la clave de sesión, así que la cookie que llegó con
+  // esta petición ya no vale: se reemite aquí para no dejar a quien acaba de
+  // guardar fuera de su propia cuenta.
+  return redirect("/admin/cuenta?ok=1", { "Set-Cookie": await sessionCookie(updated) });
 }
 
 // --------------------------------------------------------------- listado
 
-async function listView(
-  db: D1Database,
-  config: AdminConfig,
-  session: Session,
-  url: URL,
-): Promise<Response> {
+async function listView(db: D1Database, admin: Admin, session: Session, url: URL): Promise<Response> {
   const filters = parseFilters(url.searchParams);
 
   const [countsData, segmentosDisponibles, { rows, total }, csrf] = await Promise.all([
     counts(db),
     segmentos(db, filters.origen),
     listLeads(db, filters),
-    csrfToken(config, session),
+    csrfToken(admin, session),
   ]);
 
   return listPage(session.email, csrf, filters, countsData, segmentosDisponibles, rows, total);
@@ -171,7 +259,7 @@ async function exportView(db: D1Database, url: URL): Promise<Response> {
 
 async function detailView(
   db: D1Database,
-  config: AdminConfig,
+  admin: Admin,
   session: Session,
   url: URL,
   id: number,
@@ -180,20 +268,20 @@ async function detailView(
   if (!lead) return redirect("/admin");
 
   const query = filtersToQuery(parseFilters(url.searchParams));
-  const csrf = await csrfToken(config, session);
+  const csrf = await csrfToken(admin, session);
   return detailPage(session.email, csrf, lead, query, url.searchParams.get("ok") === "1");
 }
 
 async function saveLeadView(
   request: Request,
   db: D1Database,
-  config: AdminConfig,
+  admin: Admin,
   session: Session,
   url: URL,
   id: number,
 ): Promise<Response> {
   const form = await readForm(request);
-  if (!(await csrfOk(config, session, form.get("csrf")))) return redirect(`/admin/lead/${id}`);
+  if (!(await csrfOk(admin, session, form.get("csrf")))) return redirect(`/admin/lead/${id}`);
 
   const estado = String(form.get("estado") ?? "");
   if (!(ESTADOS as readonly string[]).includes(estado)) return redirect(`/admin/lead/${id}`);

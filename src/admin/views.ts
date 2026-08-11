@@ -47,21 +47,77 @@ export function loginPage(error?: string): Response {
   );
 }
 
-/** Cuando faltan los secretos: decir qué falta es más útil que un 500. */
-export function setupPage(): Response {
+/** `/admin/cuenta`: cambiar email y/o contraseña desde el propio panel. */
+export function accountPage(email: string, csrf: string, guardado: boolean, error?: string): Response {
   return page(
-    "Sin configurar",
-    `<div class="aviso">
-  <h1>El panel no está configurado</h1>
-  <p>Faltan uno o más secretos del Worker. Desde la raíz del repo:</p>
-  <pre>npm run admin:password            # genera el hash de la contraseña
-
-npx wrangler secret put ADMIN_EMAIL
-npx wrangler secret put ADMIN_PASSWORD_HASH
-npx wrangler secret put ADMIN_SESSION_SECRET   # cadena larga y aleatoria</pre>
-  <p>Mientras falte cualquiera de los tres, /admin no deja entrar a nadie.</p>
+    "Mi cuenta",
+    `${topBar(email, csrf)}
+<div class="main">
+  <a class="volver" href="/admin">← Volver al listado</a>
+  <h1>Mi cuenta</h1>
+  <div class="caja" style="max-width:420px">
+    ${error ? `<p class="error">${escape(error)}</p>` : ""}
+    <form method="post" action="/admin/cuenta">
+      <input type="hidden" name="csrf" value="${escape(csrf)}">
+      <div class="campo">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" value="${escape(email)}" autocomplete="username" required>
+      </div>
+      <div class="campo">
+        <label for="password_actual">Contraseña actual</label>
+        <input id="password_actual" name="password_actual" type="password" autocomplete="current-password" required>
+      </div>
+      <p style="color:var(--muted);font-size:12.5px;margin:-6px 0 4px">
+        Hace falta siempre, cambie o no el email: es lo que confirma que eres tú.
+      </p>
+      <div class="campo">
+        <label for="password_nueva">Nueva contraseña</label>
+        <input id="password_nueva" name="password_nueva" type="password" autocomplete="new-password">
+      </div>
+      <div class="campo">
+        <label for="password_repite">Repite la nueva contraseña</label>
+        <input id="password_repite" name="password_repite" type="password" autocomplete="new-password">
+      </div>
+      <p style="color:var(--muted);font-size:12.5px;margin:-6px 0 12px">
+        Deja los dos campos de contraseña en blanco para no cambiarla.
+      </p>
+      <button type="submit">Guardar</button>
+      ${guardado ? `<span class="guardado">Guardado</span>` : ""}
+    </form>
+  </div>
 </div>`,
-    503,
+    error ? 400 : 200,
+  );
+}
+
+/**
+ * Se sirve mientras no exista ninguna cuenta todavía (tabla `admin_user`
+ * vacía). Cualquiera que llegue aquí antes que el dueño real del panel se
+ * queda con el acceso: es el mismo riesgo que un "crear cuenta de admin" de
+ * cualquier instalador, y aceptable porque no hay nada que proteger todavía
+ * — pero conviene visitarla justo después de aplicar las migraciones, no
+ * dejarla abierta esperando.
+ */
+export function setupPage(error?: string): Response {
+  return page(
+    "Crear el acceso",
+    `<div class="login">
+  <h1>Crear el acceso al panel</h1>
+  <p class="sub">Todavía no hay ninguna cuenta. Esta es la única vez que se pide sin haber entrado antes.</p>
+  ${error ? `<p class="error">${escape(error)}</p>` : ""}
+  <form method="post" action="/admin/setup">
+    <div class="campo">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="username" required autofocus>
+    </div>
+    <div class="campo">
+      <label for="password">Contraseña</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" required>
+    </div>
+    <button type="submit">Crear y entrar</button>
+  </form>
+</div>`,
+    error ? 400 : 200,
   );
 }
 

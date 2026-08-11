@@ -197,6 +197,7 @@ export function topBar(email: string, csrf: string): string {
   return `<div class="bar">
   <strong><a href="/admin" style="color:inherit">Bixio · leads</a></strong>
   <span class="who">${escape(email)}
+    · <a href="/admin/cuenta">Cuenta</a>
     <form method="post" action="/admin/logout" style="display:inline">
       <input type="hidden" name="csrf" value="${escape(csrf)}">
       <button class="btn-plano" style="padding:3px 10px;font-size:12px">Salir</button>

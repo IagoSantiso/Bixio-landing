@@ -1,30 +1,79 @@
 /**
  * Acceso al panel: un único usuario, sesión en cookie firmada.
  *
- * No hay tabla de usuarios ni registro ni recuperación de contraseña. Las
- * credenciales son tres secretos del Worker (ver `Env`) y la sesión es una
- * cookie httpOnly firmada con HMAC: sin estado en D1, así que cerrar sesión en
- * todas partes es cambiar `ADMIN_SESSION_SECRET`.
+ * La cuenta vive en D1 (tabla `admin_user`, ver migrations/0003_admin_user.sql)
+ * y no en secretos del Worker: así se puede crear la primera vez desde
+ * `/admin/setup` y cambiar después desde `/admin/cuenta`, sin tocar
+ * `wrangler secret put`. Es el mismo nivel de acceso que ya hace falta para
+ * todo lo demás del panel — nadie gana un privilegio nuevo por poder
+ * gestionar su propia contraseña.
+ *
+ * La sesión es una cookie httpOnly firmada con HMAC usando el
+ * `session_secret` de esa fila: no hay tabla de sesiones en D1, así que
+ * cerrar sesión en todas partes es rotar ese secreto (lo que hace, de paso,
+ * cualquier cambio de contraseña — ver `updateAdmin`).
  */
-
-import type { Env } from "../env";
 
 const COOKIE = "bixio_admin";
 const SESSION_HOURS = 12;
+const ITERATIONS = 210_000;
 
-export type AdminConfig = {
+export type Admin = {
   email: string;
   passwordHash: string;
   secret: string;
 };
 
-/** Devuelve null si el panel no está configurado todavía. */
-export function readConfig(env: Env): AdminConfig | null {
-  const email = env.ADMIN_EMAIL?.trim();
-  const passwordHash = env.ADMIN_PASSWORD_HASH?.trim();
-  const secret = env.ADMIN_SESSION_SECRET?.trim();
-  if (!email || !passwordHash || !secret) return null;
-  return { email, passwordHash, secret };
+/** null si todavía no se ha creado la cuenta del panel. */
+export async function getAdmin(db: D1Database): Promise<Admin | null> {
+  const row = await db
+    .prepare("SELECT email, password_hash, session_secret FROM admin_user WHERE id = 1")
+    .first<{ email: string; password_hash: string; session_secret: string }>();
+  if (!row) return null;
+  return { email: row.email, passwordHash: row.password_hash, secret: row.session_secret };
+}
+
+/**
+ * Solo tiene efecto si todavía no existe la fila (`INSERT ... id = 1` choca
+ * con la que ya hubiera). Quien llama debe comprobar `getAdmin` primero: así
+ * el mensaje que ve quien lo intenta después de que ya exista es "esa cuenta
+ * ya está creada", no un error de la base de datos.
+ */
+export async function createAdmin(db: D1Database, email: string, password: string): Promise<void> {
+  const passwordHash = await hashPassword(password);
+  const secret = bytesToBase64(crypto.getRandomValues(new Uint8Array(32)));
+  await db
+    .prepare("INSERT INTO admin_user (id, email, password_hash, session_secret) VALUES (1, ?, ?, ?)")
+    .bind(email, passwordHash, secret)
+    .run();
+}
+
+/**
+ * Cambia email y/o contraseña. El `session_secret` se rota siempre que se
+ * llama, tanto si cambia la contraseña como si no: es lo que invalida de
+ * golpe cualquier sesión abierta que no sea la que acaba de hacer el cambio
+ * (esa se reemite aparte, ver `saveAccountView` en index.ts).
+ */
+export async function updateAdmin(
+  db: D1Database,
+  updates: { email: string; password?: string },
+): Promise<Admin> {
+  const passwordHash = updates.password ? await hashPassword(updates.password) : null;
+  const secret = bytesToBase64(crypto.getRandomValues(new Uint8Array(32)));
+
+  await db
+    .prepare(
+      `UPDATE admin_user
+          SET email = ?, session_secret = ?, updated_at = datetime('now'),
+              password_hash = COALESCE(?, password_hash)
+        WHERE id = 1`,
+    )
+    .bind(updates.email, secret, passwordHash)
+    .run();
+
+  const admin = await getAdmin(db);
+  if (!admin) throw new Error("admin_user desapareció durante la actualización");
+  return admin;
 }
 
 // ---------------------------------------------------------------- utilidades
@@ -82,9 +131,24 @@ async function hmac(secret: string, message: string): Promise<string> {
 // ----------------------------------------------------------------- contraseña
 
 /**
- * Verifica contra `pbkdf2$<iteraciones>$<salt b64>$<hash b64>`.
- * El hash lo genera `npm run admin:password`, que usa el mismo formato.
+ * Genera `pbkdf2$<iteraciones>$<salt b64>$<hash b64>`. Corre en el propio
+ * Worker (Web Crypto, no Node): es lo que permite crear y cambiar la cuenta
+ * desde una petición HTTP en vez de con un script aparte.
  */
+async function hashPassword(password: string): Promise<string> {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const key = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, [
+    "deriveBits",
+  ]);
+  const bits = await crypto.subtle.deriveBits(
+    { name: "PBKDF2", salt: salt as BufferSource, iterations: ITERATIONS, hash: "SHA-256" },
+    key,
+    256,
+  );
+  return `pbkdf2$${ITERATIONS}$${bytesToBase64(salt)}$${bytesToBase64(new Uint8Array(bits))}`;
+}
+
+/** Verifica contra el formato que genera `hashPassword`. */
 export async function verifyPassword(stored: string, candidate: string): Promise<boolean> {
   const parts = stored.split("$");
   if (parts.length !== 4 || parts[0] !== "pbkdf2") return false;
@@ -119,18 +183,18 @@ type SessionPayload = { sub: string; exp: number };
 
 export type Session = { email: string };
 
-async function sign(config: AdminConfig, payload: SessionPayload): Promise<string> {
+async function sign(admin: Admin, payload: SessionPayload): Promise<string> {
   const body = base64UrlEncode(JSON.stringify(payload));
-  return `${body}.${await hmac(config.secret, body)}`;
+  return `${body}.${await hmac(admin.secret, body)}`;
 }
 
-async function verify(config: AdminConfig, token: string): Promise<SessionPayload | null> {
+async function verify(admin: Admin, token: string): Promise<SessionPayload | null> {
   const dot = token.lastIndexOf(".");
   if (dot < 1) return null;
 
   const body = token.slice(0, dot);
   const signature = token.slice(dot + 1);
-  if (!timingSafeEqual(await hmac(config.secret, body), signature)) return null;
+  if (!timingSafeEqual(await hmac(admin.secret, body), signature)) return null;
 
   try {
     const payload = JSON.parse(base64UrlDecode(body)) as SessionPayload;
@@ -153,12 +217,12 @@ function readCookie(request: Request, name: string): string | null {
 }
 
 /** La sesión del que pide, o null si no hay ninguna válida. */
-export async function readSession(request: Request, config: AdminConfig): Promise<Session | null> {
+export async function readSession(request: Request, admin: Admin): Promise<Session | null> {
   const token = readCookie(request, COOKIE);
   if (!token) return null;
-  const payload = await verify(config, token);
+  const payload = await verify(admin, token);
   // Si cambia el email del admin, las sesiones del anterior dejan de valer.
-  if (!payload || payload.sub !== config.email) return null;
+  if (!payload || payload.sub !== admin.email) return null;
   return { email: payload.sub };
 }
 
@@ -168,9 +232,9 @@ export async function readSession(request: Request, config: AdminConfig): Promis
  * `SameSite=Strict` es la primera defensa contra CSRF; el token de §csrf es la
  * segunda.
  */
-export async function sessionCookie(config: AdminConfig): Promise<string> {
+export async function sessionCookie(admin: Admin): Promise<string> {
   const exp = Math.floor(Date.now() / 1000) + SESSION_HOURS * 3600;
-  const token = await sign(config, { sub: config.email, exp });
+  const token = await sign(admin, { sub: admin.email, exp });
   return `${COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_HOURS * 3600}`;
 }
 
@@ -181,17 +245,13 @@ export function clearCookie(): string {
 // ---------------------------------------------------------------------- csrf
 
 /** Token ligado a la sesión: sin cookie válida no se puede fabricar. */
-export async function csrfToken(config: AdminConfig, session: Session): Promise<string> {
-  return hmac(config.secret, `csrf:${session.email}`);
+export async function csrfToken(admin: Admin, session: Session): Promise<string> {
+  return hmac(admin.secret, `csrf:${session.email}`);
 }
 
-export async function csrfOk(
-  config: AdminConfig,
-  session: Session,
-  candidate: unknown,
-): Promise<boolean> {
+export async function csrfOk(admin: Admin, session: Session, candidate: unknown): Promise<boolean> {
   if (typeof candidate !== "string" || !candidate) return false;
-  return timingSafeEqual(await csrfToken(config, session), candidate);
+  return timingSafeEqual(await csrfToken(admin, session), candidate);
 }
 
 // ------------------------------------------------------------ fuerza bruta

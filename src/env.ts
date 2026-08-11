@@ -9,23 +9,11 @@ export interface Env {
    */
   DB?: D1Database;
 
-  /**
-   * Acceso al panel. Los tres son secretos (`npx wrangler secret put …`), no
-   * variables de wrangler.jsonc: ese archivo está en el repo.
-   *
-   *   ADMIN_EMAIL           email del único usuario
-   *   ADMIN_PASSWORD_HASH   `pbkdf2$<iteraciones>$<salt b64>$<hash b64>`,
-   *                         generado con `npm run admin:password`
-   *   ADMIN_SESSION_SECRET  clave para firmar la cookie de sesión; una cadena
-   *                         larga y aleatoria, cambiarla cierra las sesiones
-   *
-   * Si falta cualquiera de los tres, /admin responde 503 con instrucciones.
-   * Nunca hay usuario por defecto: un panel de leads sin contraseña puesta es
-   * peor que un panel que no existe.
-   */
-  ADMIN_EMAIL?: string;
-  ADMIN_PASSWORD_HASH?: string;
-  ADMIN_SESSION_SECRET?: string;
+  // Sin secretos de acceso al panel: la cuenta (email, contraseña, clave de
+  // sesión) vive en D1 (`admin_user`, ver migrations/0003_admin_user.sql).
+  // Se crea la primera vez que alguien visita /admin sin que exista ninguna
+  // todavía (`/admin/setup`) y se cambia después desde `/admin/cuenta`. Ver
+  // src/admin/auth.ts.
 }
 
 export function json(body: unknown, status = 200): Response {

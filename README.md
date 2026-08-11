@@ -37,10 +37,9 @@ components/
 src/
   worker.ts       # router: /api/lead, /admin, 301 de /trasteros, sitemap, robots
   leads.ts        # POST /api/lead, común a las tres fuentes de captación
-  env.ts          # bindings y secretos
+  env.ts          # bindings
   admin/          # el panel de leads (ver abajo)
-migrations/       # esquema de D1 para los leads
-scripts/          # utilidades de una sola vez (hash de la contraseña del panel)
+migrations/       # esquema de D1 para los leads y la cuenta del panel
 ```
 
 ### Páginas comerciales
@@ -152,29 +151,41 @@ comprobar la sesión. Por eso `/admin` y `/admin/*` están en `run_worker_first`
 y por eso el panel es HTML renderizado en el Worker en lugar de server
 components.
 
-Para dejarlo operativo hacen falta tres secretos. No van en `wrangler.jsonc`,
-que está en el repo:
+**La cuenta vive en D1, no en secretos del Worker.** Sin registro ni gestión de
+usuarios: una sola fila (`admin_user`, `migrations/0003_admin_user.sql`) con
+email, hash de contraseña y la clave que firma la sesión. Para dejarlo
+operativo basta con aplicar las migraciones y visitar el panel:
 
 ```bash
-npm run admin:password                          # pide la contraseña y devuelve el hash
-npx wrangler secret put ADMIN_EMAIL
-npx wrangler secret put ADMIN_PASSWORD_HASH     # el valor que devuelve el comando anterior
-npx wrangler secret put ADMIN_SESSION_SECRET    # cadena larga y aleatoria
+npx wrangler d1 migrations apply bixio-leads --remote
 ```
 
-Mientras falte cualquiera de los tres, `/admin` no deja entrar a nadie y explica
-qué falta. Cambiar `ADMIN_SESSION_SECRET` cierra todas las sesiones abiertas.
+La primera vez que alguien visita `/admin` sin que exista ninguna cuenta
+todavía, se le manda a `/admin/setup` a crearla (email + contraseña) y entra
+directo. Después, email y contraseña se cambian desde dentro del panel, en
+`/admin/cuenta` — pide siempre la contraseña actual para confirmar el cambio, y
+al guardar rota la clave de sesión, así que cierra cualquier otra sesión
+abierta.
 
-En local, los mismos tres valores van en un archivo `.dev.vars` (ignorado por
-git) y se levanta con `npx wrangler dev`.
+**Aviso:** hasta que se crea esa primera cuenta, `/admin/setup` no comprueba
+quién la crea — es quien llegue primero, como el instalador de cualquier
+aplicación. No es un problema mientras el panel no tenga datos que proteger,
+pero conviene visitarla justo después de aplicar las migraciones, no dejarla
+esperando.
+
+Si más adelante hace falta algo más serio que contraseña propia —login con
+Google, MFA—, la vía natural es poner **Cloudflare Access** delante de
+`/admin/*` desde el dashboard de Zero Trust: sin escribir cliente OAuth
+ninguno, gratis hasta 50 usuarios.
 
 Detalles que conviene no romper al tocarlo:
 
-- La sesión es una cookie `httpOnly; Secure; SameSite=Strict` firmada con HMAC,
-  sin estado en D1. Dura 12 horas.
+- La sesión es una cookie `httpOnly; Secure; SameSite=Strict` firmada con HMAC
+  usando la clave de esa fila, sin tabla de sesiones aparte. Dura 12 horas.
 - La comprobación de sesión está **una sola vez**, arriba del router de
   `src/admin/index.ts`, para que añadir una ruta no pueda dejarla abierta.
-- Los formularios que escriben llevan token CSRF ligado a la sesión.
+- Los formularios que escriben llevan token CSRF ligado a la sesión, y
+  `/admin/cuenta` además exige la contraseña actual.
 - `/admin` no se indexa por tres vías a la vez: `Disallow` en `robots.txt`,
   `noindex` en la meta y en la cabecera `X-Robots-Tag`. Y no está en el sitemap.
 - El CSV escapa las celdas que empiezan por `= + - @`: ese texto lo escribe

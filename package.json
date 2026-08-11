@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
-    "deploy": "wrangler deploy",
-    "admin:password": "node scripts/hash-admin-password.mjs"
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "next": "^16.3.0",
