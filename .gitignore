@@ -11,6 +11,8 @@ next-env.d.ts
 # entorno
 .env*
 !.env.example
+# secretos del panel en local (ver README, "Panel de leads")
+.dev.vars
 
 # varios
 .DS_Store

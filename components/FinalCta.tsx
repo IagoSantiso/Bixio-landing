@@ -5,9 +5,9 @@ export function FinalCta() {
         <div className="eyebrow eyebrow-center">Empieza hoy</div>
         <h2>La próxima vez que guardes algo, sabrás dónde está.</h2>
         <p>Diez cajas gratis, sin tarjeta. Si te sirve, sigues.</p>
-        <a className="btn btn-coral" href="#">
+        <button type="button" className="btn btn-coral" data-lead-modal="cierre">
           Crear mi inventario
-        </a>
+        </button>
       </div>
     </section>
   );

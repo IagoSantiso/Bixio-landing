@@ -342,6 +342,53 @@ footer{background:var(--crema-2);border-top:2px solid rgba(45,42,50,.12);padding
 }
 .lead-error{color:var(--coral-deep);font-size:15px;font-weight:600}
 
+/* ---------- modal de captación de particulares ---------- */
+/* Lo abre cualquier CTA con data-lead-modal; ver components/StartModal.tsx. */
+/* `position:fixed` explícito y no heredado del navegador: el estilo de agente
+   de usuario deja el <dialog> en `absolute`, y como el modal se abre desde el
+   bloque de precios —a mitad de página— aparecía a 900px por encima de la
+   pantalla, invisible para quien acababa de pulsar el botón. Con fixed +
+   inset:0 + margin:auto queda centrado en la ventana se abra desde donde se
+   abra, y además sirve de referencia al botón de cerrar. */
+.modal{
+  position:fixed;inset:0;margin:auto;
+  width:min(440px,92vw);height:fit-content;max-height:calc(100dvh - 32px);overflow:auto;
+  border:2px solid var(--carbon);border-radius:22px;
+  padding:28px 26px 26px;background:var(--crema);color:var(--carbon);
+  box-shadow:6px 6px 0 var(--carbon);
+}
+.modal::backdrop{background:rgba(45,42,50,.55)}
+.modal h2{font-size:28px}
+.modal-sub{color:var(--muted);font-size:16px;margin-top:10px}
+.modal-cerrar{
+  position:absolute;top:12px;right:14px;width:32px;height:32px;
+  border:0;background:transparent;color:var(--muted);
+  font-size:26px;line-height:1;cursor:pointer;border-radius:50%;
+}
+.modal-cerrar:hover{background:var(--crema-2);color:var(--carbon)}
+.modal-form{display:flex;flex-direction:column;gap:16px}
+.modal-form .lead-field span{font-size:14px}
+.modal-form .lead-field input{padding:11px 14px;border-radius:12px}
+.modal-form .btn{width:100%;justify-content:center}
+.modal-form .btn[disabled]{opacity:.6;cursor:progress}
+.modal-segmentos{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+.modal-segmentos legend{
+  font-family:var(--font-display);font-weight:500;font-size:14px;padding:0;margin-bottom:9px;
+}
+/* El radio real sigue ahí, solo invisible: el chip se pinta con :checked y el
+   teclado y los lectores de pantalla no pierden nada. */
+.modal-chip input{position:absolute;opacity:0;width:0;height:0}
+.modal-chip span{
+  display:inline-block;cursor:pointer;background:#fff;
+  border:2px solid var(--carbon);border-radius:999px;padding:8px 15px;
+  font-family:var(--font-display);font-weight:500;font-size:15px;
+  transition:background .14s ease,color .14s ease;
+}
+.modal-chip input:checked + span{background:var(--carbon);color:var(--crema)}
+.modal-chip input:focus-visible + span{outline:3px solid var(--coral-deep);outline-offset:3px}
+.modal-done h2{font-size:26px}
+.modal-done p{color:var(--muted);margin:12px 0 20px}
+
 /* enlace cruzado entre las dos páginas */
 .crosslink{padding:0 0 56px;text-align:center;font-size:17px}
 .crosslink a{font-family:var(--font-display);font-weight:600;color:var(--coral-deep);border-bottom:2px solid var(--mostaza)}
