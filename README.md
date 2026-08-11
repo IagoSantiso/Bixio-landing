@@ -50,14 +50,19 @@ las reglas que siguen y que conviene no romper al editarlas:
   quita la navegación de consumidor y el "Empezar gratis".
 - Las dos se indexan y están en el sitemap. Son captación orgánica, no solo
   destino de email.
-- **La home no las menciona, y es a propósito.** Ni el menú del header, ni la
-  sección b2b que hubo, ni el bloque de precios: a quien viene a organizar su
-  casa no se le ofrece un camino de negocio. La única puerta desde el sitio de
-  particulares es la columna "Para negocios" del footer; el resto del tráfico
-  llega por email del agente o por un buscador. Es una decisión de navegación,
-  no de indexación: siguen siendo URLs públicas, sin `noindex` ni ningún tipo
-  de puerta, en el sitemap, y `robots.txt` da permiso explícito a GPTBot,
-  ClaudeBot y PerplexityBot además del `*`.
+- **La home casi no las menciona, y es a propósito.** Ni el menú del header, ni
+  la sección b2b que hubo, ni las tarjetas de "Para quién es": a quien viene a
+  organizar su casa no se le ofrece un camino de negocio. Solo quedan dos
+  puertas, las dos calladas — la columna "Para negocios" del footer y una línea
+  al final del bloque de precios (`.price-b2b`). **Esa línea no puede llevar
+  cifras, porcentajes, comisiones ni márgenes**: dice que existe una vía para
+  negocios y nada más, porque el trato no es asunto de un particular que está
+  eligiendo plan. El resto del tráfico llega por email del agente o por un
+  buscador.
+- Nada de lo anterior es una decisión de indexación: las dos páginas siguen
+  siendo URLs públicas, sin `noindex` ni ningún tipo de puerta, en el sitemap, y
+  `robots.txt` da permiso explícito a GPTBot, ClaudeBot y PerplexityBot además
+  del `*`.
 
 Todo el contenido está en arrays al principio de cada `page.tsx`, salvo lo que
 comparten las dos, que vive en `components/commercial/data.ts`: los tipos de

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CheckIcon } from "./icons";
 
 type Plan = {
@@ -121,6 +122,19 @@ export function Pricing() {
         <p className="price-note">
           Los <strong>tags NFC se compran una vez</strong> y son reutilizables: pack de 100 unidades
           por 29 €.
+        </p>
+
+        {/*
+          Única mención al canal de negocio en toda la home, y a propósito no
+          dice nada del trato: ni cifras, ni comisiones, ni márgenes. A quien no
+          tiene un negocio no le aporta y le distrae del plan que estaba
+          mirando; a quien lo tiene le basta para saber que existe una puerta.
+          El destino es /comercios, que ya remata con su propio enlace a
+          /recomienda para quien encaje mejor ahí.
+        */}
+        <p className="price-b2b">
+          ¿Tienes un negocio y crees que esto encaja en tu tienda o con tus clientes?{" "}
+          <Link href="/comercios">Cuéntanos</Link>.
         </p>
       </div>
     </section>

@@ -156,6 +156,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,248,243,.88);backdro
 }
 .price-note strong{color:var(--carbon)}
 .price-note a{color:var(--coral-deep);font-weight:700}
+/* Línea de negocio: mismo tono apagado que el aviso de tags, pero sin caja ni
+   peso de CTA. Tiene que pasar desapercibida para quien no la esté buscando. */
+.price-b2b{margin-top:14px;text-align:center;font-size:14px;color:var(--muted)}
+.price-b2b a{color:var(--coral-deep);font-weight:600;border-bottom:1px solid rgba(232,94,64,.4)}
+.price-b2b a:hover{border-bottom-color:var(--coral-deep)}
 .plan.featured{background:var(--carbon);color:var(--crema);box-shadow:6px 6px 0 var(--coral)}
 .plan.featured li{color:rgba(255,248,243,.72)}
 .plan.featured .plan-price small{color:rgba(255,248,243,.7)}
