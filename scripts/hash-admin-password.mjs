@@ -38,9 +38,15 @@ function ask(question) {
 }
 
 const password = await ask("Contraseña del panel: ");
-if (password.length < 12) {
-  console.error("\nDemasiado corta. Mínimo 12 caracteres: es la única puerta del panel.");
+if (!password) {
+  console.error("\nHace falta escribir algo.");
   process.exit(1);
+}
+// Aviso, no bloqueo: al arrancar (sin datos reales que proteger) tiene
+// sentido algo simple como "admin" y cambiarlo luego. El script no decide
+// eso por quien lo ejecuta.
+if (password.length < 12) {
+  console.error("Aviso: contraseña corta. Vale para arrancar, cámbiala antes de que el panel tenga datos reales.\n");
 }
 
 const salt = randomBytes(16);
