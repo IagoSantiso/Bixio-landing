@@ -27,32 +27,18 @@
 
   "observability": {
     "enabled": true
-  }
+  },
 
-  // ---------------------------------------------------------------------
-  // Los secretos del panel (ADMIN_EMAIL, ADMIN_PASSWORD_HASH y
-  // ADMIN_SESSION_SECRET) NO van aquí: este archivo está en el repo. Se
-  // ponen con `npx wrangler secret put …`, ver README, "Panel de leads".
-  //
-  // TODO(d1): leads de las tres fuentes de captación.
-  //
-  //   npx wrangler d1 create bixio-leads
-  //
-  // Pega el `database_id` que devuelve, descomenta este bloque y aplica la
-  // migración:
-  //
-  //   npx wrangler d1 migrations apply bixio-leads --remote
-  //
-  // Hasta entonces el endpoint responde OK y vuelca cada lead a Workers Logs
-  // (observability está activado arriba), así que no se pierde ninguno, y el
-  // panel de /admin lo dice en vez de fallar.
-  //
-  // "d1_databases": [
-  //   {
-  //     "binding": "DB",
-  //     "database_name": "bixio-leads",
-  //     "database_id": "<pegar aquí>",
-  //     "migrations_dir": "./migrations"
-  //   }
-  // ]
+  // Los leads de las tres fuentes de captación y la cuenta del panel
+  // (`admin_user`, ver migrations/0003_admin_user.sql) viven aquí. Sin este
+  // binding, /api/lead vuelca a Workers Logs y /admin responde 503 en vez de
+  // fallar. Migraciones: `npx wrangler d1 migrations apply bixio-leads --remote`.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bixio-leads",
+      "database_id": "cdffdb9e-af1e-400b-a408-af3897cb9f64",
+      "migrations_dir": "./migrations"
+    }
+  ]
 }
