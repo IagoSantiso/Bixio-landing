@@ -16,7 +16,16 @@
 
 const COOKIE = "bixio_admin";
 const SESSION_HOURS = 12;
-const ITERATIONS = 210_000;
+/**
+ * 100.000 y no más: es el tope real que aplica `workerd` en producción a
+ * `crypto.subtle.deriveBits` con PBKDF2 — por encima lanza `NotSupportedError`
+ * (visto en Workers Logs, no está documentado en un límite obvio). `wrangler
+ * dev --local` no lo hace cumplir, así que un valor mayor pasa el desarrollo
+ * local y revienta en producción. El número de iteraciones va dentro del
+ * propio hash (`pbkdf2$<iteraciones>$...`), así que bajar esta constante no
+ * invalida ninguna cuenta ya creada con un valor distinto.
+ */
+const ITERATIONS = 100_000;
 
 export type Admin = {
   email: string;
