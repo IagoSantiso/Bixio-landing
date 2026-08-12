@@ -19,7 +19,10 @@
     "binding": "ASSETS",
     // Next genera out/404.html; Cloudflare lo sirve en rutas desconocidas.
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/trasteros", "/sitemap.xml", "/robots.txt"]
+    // /admin va aquí porque es la única forma de que esté protegido: lo que
+    // sirve el binding de assets no ejecuta el Worker, y por tanto no
+    // comprueba ninguna sesión.
+    "run_worker_first": ["/api/*", "/admin", "/admin/*", "/trasteros", "/sitemap.xml", "/robots.txt"]
   },
 
   "observability": {
@@ -27,7 +30,11 @@
   }
 
   // ---------------------------------------------------------------------
-  // TODO(d1): leads de /comercios y /recomienda.
+  // Los secretos del panel (ADMIN_EMAIL, ADMIN_PASSWORD_HASH y
+  // ADMIN_SESSION_SECRET) NO van aquí: este archivo está en el repo. Se
+  // ponen con `npx wrangler secret put …`, ver README, "Panel de leads".
+  //
+  // TODO(d1): leads de las tres fuentes de captación.
   //
   //   npx wrangler d1 create bixio-leads
   //
@@ -37,7 +44,8 @@
   //   npx wrangler d1 migrations apply bixio-leads --remote
   //
   // Hasta entonces el endpoint responde OK y vuelca cada lead a Workers Logs
-  // (observability está activado arriba), así que no se pierde ninguno.
+  // (observability está activado arriba), así que no se pierde ninguno, y el
+  // panel de /admin lo dice en vez de fallar.
   //
   // "d1_databases": [
   //   {

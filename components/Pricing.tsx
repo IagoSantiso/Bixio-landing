@@ -9,7 +9,11 @@ type Plan = {
   period: string;
   features: string[];
   cta: string;
-  href: string;
+  /**
+   * Qué se preselecciona en el modal al pulsar este plan. Vacío = que lo elija
+   * quien lo abre. Este valor acaba en D1 como segmento del lead.
+   */
+  segmento?: string;
   featured?: boolean;
   badge?: string;
 };
@@ -28,7 +32,6 @@ const plans: Plan[] = [
       "Un usuario",
     ],
     cta: "Crear cuenta",
-    href: "#",
   },
   {
     tagline: "Pago único",
@@ -43,7 +46,7 @@ const plans: Plan[] = [
       "Al acabar, pasas a anual o se borra",
     ],
     cta: "Activar mudanza",
-    href: "#",
+    segmento: "mudanza",
   },
   {
     tagline: "Anual",
@@ -58,7 +61,7 @@ const plans: Plan[] = [
       "Pack de tags aparte",
     ],
     cta: "Elegir este plan",
-    href: "#",
+    segmento: "casa",
   },
   {
     tagline: "Anual",
@@ -73,7 +76,7 @@ const plans: Plan[] = [
       "Cuenta compartida con toda la casa",
     ],
     cta: "Elegir este plan",
-    href: "#",
+    segmento: "casa",
     featured: true,
     badge: "Completa",
   },
@@ -112,9 +115,14 @@ export function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a className={plan.featured ? "btn" : "btn btn-ghost"} href={plan.href}>
+              <button
+                type="button"
+                className={plan.featured ? "btn" : "btn btn-ghost"}
+                data-lead-modal={`plan:${plan.name}`}
+                data-lead-segmento={plan.segmento}
+              >
                 {plan.cta}
-              </a>
+              </button>
             </div>
           ))}
         </div>

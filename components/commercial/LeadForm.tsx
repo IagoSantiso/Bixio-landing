@@ -52,6 +52,10 @@ export function LeadForm({ leadType, fields, submitLabel, confirmation }: Props)
         body: JSON.stringify({
           lead_type: leadType,
           page: window.location.pathname,
+          // Las páginas comerciales tienen un solo formulario, al final: el
+          // CTA que lo llenó siempre es ese. La columna existe para poder
+          // comparar con los varios CTA de la home en el mismo listado.
+          cta: "formulario",
           ...readUtm(),
           ...data,
         }),
