@@ -186,18 +186,31 @@ function embedUrl(shareUrl: string): string {
 
 /**
  * Sección nueva e independiente del CRM de leads: solo el shared link de
- * Plausible, incrustado a pantalla completa. Nada de esto toca la tabla
- * `leads` ni las pantallas de arriba — nótalo por la ausencia total de `db`
- * en esta función.
+ * Plausible. Nada de esto toca la tabla `leads` ni las pantallas de arriba —
+ * nótalo por la ausencia total de `db` en esta función.
+ *
+ * El iframe no lleva una altura fija: `embed.host.js` es el script que
+ * ofrece el propio Plausible para que el iframe mida el contenido real de la
+ * página incrustada y ajuste su altura a eso (escucha un `postMessage` que
+ * manda la página de dentro). El atributo `plausible-embed` es el que ese
+ * script usa para encontrar el iframe. Sin él, o el iframe se queda con una
+ * altura fija que no encaja con cuánto haya que enseñar — corto y con scroll
+ * propio si hay poco tráfico, cortado si hay mucho.
  */
 export function trafficPage(email: string, csrf: string, shareUrl: string | undefined): Response {
   const contenido = shareUrl
     ? `<iframe
+    plausible-embed
     class="trafico-iframe"
     src="${escape(embedUrl(shareUrl))}"
     title="Tráfico de Bixio (Plausible)"
     loading="lazy"
-  ></iframe>`
+    style="height:1600px"
+  ></iframe>
+  <p class="trafico-attrib">
+    Estadísticas de <a href="https://plausible.io" target="_blank" rel="noopener">Plausible Analytics</a>
+  </p>
+  <script async src="https://plausible.io/js/embed.host.js"></script>`
     : `<div class="aviso" style="margin:24px">
   <h1>Falta configurar el shared link de Plausible</h1>
   <p>
@@ -210,11 +223,9 @@ export function trafficPage(email: string, csrf: string, shareUrl: string | unde
 
   return page(
     "Tráfico",
-    `<div class="app-shell">
-${topBar(email, csrf, "trafico")}
-<div class="main main-trafico">
+    `${topBar(email, csrf, "trafico")}
+<div class="main">
 ${contenido}
-</div>
 </div>`,
   );
 }

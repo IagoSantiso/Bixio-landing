@@ -54,14 +54,14 @@ a:hover{text-decoration:underline}
 .bar-nav a.activa{color:var(--ink);font-weight:600;text-decoration:none}
 .main{padding:18px 20px 48px}
 
-/* tráfico: el único sitio del panel que quiere ocupar la pantalla entera en
-   vez de fluir con el resto del documento, así que la columna bar+main lleva
-   su propio contenedor flex y no toca el layout del resto de pantallas. */
-.app-shell{display:flex;flex-direction:column;min-height:100vh}
-.app-shell .bar{flex:0 0 auto}
-.main-trafico{flex:1 1 auto;display:flex;padding:0}
-.main-trafico>*{flex:1 1 auto;min-width:0}
-.trafico-iframe{border:0;display:block;width:100%;height:100%}
+/* tráfico: alto fijo a la pantalla, no — el script de embed de Plausible
+   ajusta la altura del iframe a la de su contenido real (ver trafficPage).
+   Forzarlo a ocupar el 100% del viewport, tuviera o no tanto que enseñar,
+   deja un hueco enorme en gris cuando hay poco tráfico que graficar. El
+   ancho sí, 1px + min-width:100% es el truco que pide el propio script
+   para que calcule bien el ancho disponible antes de fijar la altura. */
+.trafico-iframe{border:0;display:block;width:1px;min-width:100%}
+.trafico-attrib{font-size:12px;color:var(--muted);margin-top:8px}
 h1{font-size:18px;margin:0 0 14px}
 h2{font-size:14px;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 
