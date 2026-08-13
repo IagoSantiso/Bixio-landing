@@ -39,10 +39,14 @@ body{
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 .bar{
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;
   padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--line);
 }
-.bar strong{font-size:15px}
+/* En pantallas estrechas no cabe logo + nav + email + acciones en una fila:
+   antes de este nowrap, el texto del logo se partía a media frase ("Bixio"
+   / "· leads") en vez de que fuera .who quien bajara entera a su propia
+   línea, que es el flex-wrap de arriba. */
+.bar strong{font-size:15px;white-space:nowrap}
 .bar .who{color:var(--muted);font-size:13px}
 .bar-brand{display:flex;align-items:center;gap:18px}
 .bar-nav{display:flex;gap:14px;font-size:13px}
