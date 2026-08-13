@@ -164,6 +164,27 @@ export function errorPage(): Response {
 // --------------------------------------------------------------- tráfico
 
 /**
+ * Plausible añade una barra propia ("Plausible" + Login + Sign up) encima de
+ * cualquier shared link que no vaya en modo `embed`. Dentro de un iframe esa
+ * barra no solo estorba: sus enlaces llevan al login real de Plausible, que
+ * bloquea que lo carguen en un iframe (`X-Frame-Options`) y la pantalla se
+ * queda rota. `embed=true` la quita entera; `theme=light` la empareja con
+ * el resto de /admin, que no tiene modo oscuro.
+ */
+function embedUrl(shareUrl: string): string {
+  try {
+    const url = new URL(shareUrl);
+    url.searchParams.set("embed", "true");
+    if (!url.searchParams.has("theme")) url.searchParams.set("theme", "light");
+    return url.toString();
+  } catch {
+    // Un valor que no sea una URL válida no debería llegar hasta aquí, pero
+    // si pasa, mejor el shared link tal cual que un 500.
+    return shareUrl;
+  }
+}
+
+/**
  * Sección nueva e independiente del CRM de leads: solo el shared link de
  * Plausible, incrustado a pantalla completa. Nada de esto toca la tabla
  * `leads` ni las pantallas de arriba — nótalo por la ausencia total de `db`
@@ -173,7 +194,7 @@ export function trafficPage(email: string, csrf: string, shareUrl: string | unde
   const contenido = shareUrl
     ? `<iframe
     class="trafico-iframe"
-    src="${escape(shareUrl)}"
+    src="${escape(embedUrl(shareUrl))}"
     title="Tráfico de Bixio (Plausible)"
     loading="lazy"
   ></iframe>`
