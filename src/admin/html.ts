@@ -44,7 +44,20 @@ a:hover{text-decoration:underline}
 }
 .bar strong{font-size:15px}
 .bar .who{color:var(--muted);font-size:13px}
+.bar-brand{display:flex;align-items:center;gap:18px}
+.bar-nav{display:flex;gap:14px;font-size:13px}
+.bar-nav a{color:var(--muted)}
+.bar-nav a.activa{color:var(--ink);font-weight:600;text-decoration:none}
 .main{padding:18px 20px 48px}
+
+/* tráfico: el único sitio del panel que quiere ocupar la pantalla entera en
+   vez de fluir con el resto del documento, así que la columna bar+main lleva
+   su propio contenedor flex y no toca el layout del resto de pantallas. */
+.app-shell{display:flex;flex-direction:column;min-height:100vh}
+.app-shell .bar{flex:0 0 auto}
+.main-trafico{flex:1 1 auto;display:flex;padding:0}
+.main-trafico>*{flex:1 1 auto;min-width:0}
+.trafico-iframe{border:0;display:block;width:100%;height:100%}
 h1{font-size:18px;margin:0 0 14px}
 h2{font-size:14px;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 
@@ -193,9 +206,23 @@ ${body}
   );
 }
 
-export function topBar(email: string, csrf: string): string {
+/**
+ * `active` resalta la pestaña en la que estás. Por defecto "leads" porque es
+ * la pantalla de entrada del panel (listado y detalle viven ahí); "trafico"
+ * lo pasa la única pantalla que no es el CRM de leads.
+ */
+export function topBar(email: string, csrf: string, active: "leads" | "trafico" = "leads"): string {
+  const navLink = (href: string, label: string, key: "leads" | "trafico") =>
+    `<a href="${href}"${key === active ? ' class="activa"' : ""}>${label}</a>`;
+
   return `<div class="bar">
-  <strong><a href="/admin" style="color:inherit">Bixio · leads</a></strong>
+  <div class="bar-brand">
+    <strong><a href="/admin" style="color:inherit">Bixio · leads</a></strong>
+    <nav class="bar-nav">
+      ${navLink("/admin", "Leads", "leads")}
+      ${navLink("/admin/trafico", "Tráfico", "trafico")}
+    </nav>
+  </div>
   <span class="who">${escape(email)}
     · <a href="/admin/cuenta">Cuenta</a>
     <form method="post" action="/admin/logout" style="display:inline">

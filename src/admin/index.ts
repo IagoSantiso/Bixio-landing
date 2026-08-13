@@ -45,6 +45,7 @@ import {
   loginPage,
   setupPage,
   sinBasePage,
+  trafficPage,
 } from "./views";
 
 function redirect(location: string, extraHeaders: Record<string, string> = {}): Response {
@@ -133,6 +134,7 @@ async function route(request: Request, env: Env, url: URL, path: string): Promis
 
   if (path === "/admin") return listView(db, admin, session, url);
   if (path === "/admin/export.csv") return exportView(db, url);
+  if (path === "/admin/trafico") return trafficView(env, admin, session);
 
   const detalle = /^\/admin\/lead\/(\d+)$/.exec(path);
   if (detalle) {
@@ -253,6 +255,20 @@ async function listView(db: D1Database, admin: Admin, session: Session, url: URL
 async function exportView(db: D1Database, url: URL): Promise<Response> {
   const leads = await listAllLeads(db, parseFilters(url.searchParams));
   return csvResponse(leads);
+}
+
+// --------------------------------------------------------------- tráfico
+
+/**
+ * Sección independiente del CRM de leads: solo enseña el shared link de
+ * Plausible en un iframe. No hay nada que consultar en D1 aquí — Plausible ya
+ * es su propio backend — así que la única cosa que puede fallar es que
+ * `PLAUSIBLE_SHARE_URL` no esté configurado, y en ese caso lo dice en vez de
+ * enseñar un iframe roto.
+ */
+async function trafficView(env: Env, admin: Admin, session: Session): Promise<Response> {
+  const csrf = await csrfToken(admin, session);
+  return trafficPage(session.email, csrf, env.PLAUSIBLE_SHARE_URL);
 }
 
 // --------------------------------------------------------------- detalle

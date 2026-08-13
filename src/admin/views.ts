@@ -161,6 +161,43 @@ export function errorPage(): Response {
   );
 }
 
+// --------------------------------------------------------------- tráfico
+
+/**
+ * Sección nueva e independiente del CRM de leads: solo el shared link de
+ * Plausible, incrustado a pantalla completa. Nada de esto toca la tabla
+ * `leads` ni las pantallas de arriba — nótalo por la ausencia total de `db`
+ * en esta función.
+ */
+export function trafficPage(email: string, csrf: string, shareUrl: string | undefined): Response {
+  const contenido = shareUrl
+    ? `<iframe
+    class="trafico-iframe"
+    src="${escape(shareUrl)}"
+    title="Tráfico de Bixio (Plausible)"
+    loading="lazy"
+  ></iframe>`
+    : `<div class="aviso" style="margin:24px">
+  <h1>Falta configurar el shared link de Plausible</h1>
+  <p>
+    En Plausible: Site settings → Sharing → Shared links, crea uno (o usa el
+    que ya tengas) y pégalo aquí como secreto del Worker:
+  </p>
+  <pre>npx wrangler secret put PLAUSIBLE_SHARE_URL
+# pega el link entero, ej. https://plausible.io/share/tudominio.com?auth=XXXX</pre>
+</div>`;
+
+  return page(
+    "Tráfico",
+    `<div class="app-shell">
+${topBar(email, csrf, "trafico")}
+<div class="main main-trafico">
+${contenido}
+</div>
+</div>`,
+  );
+}
+
 // -------------------------------------------------------------- listado
 
 function tagOrigen(lead: Lead): string {

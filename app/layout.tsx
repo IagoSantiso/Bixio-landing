@@ -46,6 +46,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${fredoka.variable} ${nunitoSans.variable}`}>
+      <head>
+        {/*
+          Analítica sin cookies ni banner de Plausible. Va como HTML manual y
+          no como `next/script`: con `output: "export"` esta home es el único
+          layout raíz de las tres páginas públicas, así que basta este sitio;
+          y `next/script` con `beforeInteractive` no deja el tag en el HTML
+          exportado, lo inyecta desde JS en tiempo de ejecución.
+        */}
+        <script async src="https://plausible.io/js/pa-oFm90TPwrpBVrw7n6odAV.js" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+plausible.init()`,
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
