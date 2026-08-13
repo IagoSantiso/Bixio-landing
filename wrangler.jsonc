@@ -29,6 +29,14 @@
     "enabled": true
   },
 
+  // Sin esto, cada deploy borra las variables y secretos añadidos a mano
+  // desde el dashboard de Cloudflare (Settings → Variables and secrets) que
+  // no estén declarados aquí — es el caso de PLAUSIBLE_SHARE_URL (ver
+  // src/env.ts): va como secreto y no como var de este archivo a propósito,
+  // porque lleva su propio `?auth=` y no es algo para dejar en texto plano
+  // en git. `keep_vars` le dice a Wrangler que no los toque.
+  "keep_vars": true,
+
   // Los leads de las tres fuentes de captación y la cuenta del panel
   // (`admin_user`, ver migrations/0003_admin_user.sql) viven aquí. Sin este
   // binding, /api/lead vuelca a Workers Logs y /admin responde 503 en vez de

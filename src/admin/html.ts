@@ -39,12 +39,29 @@ body{
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 .bar{
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;
   padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--line);
 }
-.bar strong{font-size:15px}
+/* En pantallas estrechas no cabe logo + nav + email + acciones en una fila:
+   antes de este nowrap, el texto del logo se partía a media frase ("Bixio"
+   / "· leads") en vez de que fuera .who quien bajara entera a su propia
+   línea, que es el flex-wrap de arriba. */
+.bar strong{font-size:15px;white-space:nowrap}
 .bar .who{color:var(--muted);font-size:13px}
+.bar-brand{display:flex;align-items:center;gap:18px}
+.bar-nav{display:flex;gap:14px;font-size:13px}
+.bar-nav a{color:var(--muted)}
+.bar-nav a.activa{color:var(--ink);font-weight:600;text-decoration:none}
 .main{padding:18px 20px 48px}
+
+/* tráfico: alto fijo a la pantalla, no — el script de embed de Plausible
+   ajusta la altura del iframe a la de su contenido real (ver trafficPage).
+   Forzarlo a ocupar el 100% del viewport, tuviera o no tanto que enseñar,
+   deja un hueco enorme en gris cuando hay poco tráfico que graficar. El
+   ancho sí, 1px + min-width:100% es el truco que pide el propio script
+   para que calcule bien el ancho disponible antes de fijar la altura. */
+.trafico-iframe{border:0;display:block;width:1px;min-width:100%}
+.trafico-attrib{font-size:12px;color:var(--muted);margin-top:8px}
 h1{font-size:18px;margin:0 0 14px}
 h2{font-size:14px;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 
@@ -193,9 +210,23 @@ ${body}
   );
 }
 
-export function topBar(email: string, csrf: string): string {
+/**
+ * `active` resalta la pestaña en la que estás. Por defecto "leads" porque es
+ * la pantalla de entrada del panel (listado y detalle viven ahí); "trafico"
+ * lo pasa la única pantalla que no es el CRM de leads.
+ */
+export function topBar(email: string, csrf: string, active: "leads" | "trafico" = "leads"): string {
+  const navLink = (href: string, label: string, key: "leads" | "trafico") =>
+    `<a href="${href}"${key === active ? ' class="activa"' : ""}>${label}</a>`;
+
   return `<div class="bar">
-  <strong><a href="/admin" style="color:inherit">Bixio · leads</a></strong>
+  <div class="bar-brand">
+    <strong><a href="/admin" style="color:inherit">Bixio · leads</a></strong>
+    <nav class="bar-nav">
+      ${navLink("/admin", "Leads", "leads")}
+      ${navLink("/admin/trafico", "Tráfico", "trafico")}
+    </nav>
+  </div>
   <span class="who">${escape(email)}
     · <a href="/admin/cuenta">Cuenta</a>
     <form method="post" action="/admin/logout" style="display:inline">

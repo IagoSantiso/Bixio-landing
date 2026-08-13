@@ -63,6 +63,9 @@ export function LeadForm({ leadType, fields, submitLabel, confirmation }: Props)
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       setStatus("done");
       trackEvent("lead_ok", { lead_type: leadType });
+      // `segmento` distingue /comercios de /recomienda en Plausible: los dos
+      // valores posibles de `leadType` son justo esa distinción.
+      trackEvent("Lead B2B Submit", { segmento: leadType });
       form.reset();
     } catch {
       setStatus("error");

@@ -92,6 +92,7 @@ export function StartModal() {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       setStatus("done");
       trackEvent("lead_ok", { lead_type: "particular", location: cta });
+      trackEvent("Waitlist Submit", { segmento });
       form.reset();
     } catch {
       setStatus("error");

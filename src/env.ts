@@ -14,6 +14,18 @@ export interface Env {
   // Se crea la primera vez que alguien visita /admin sin que exista ninguna
   // todavía (`/admin/setup`) y se cambia después desde `/admin/cuenta`. Ver
   // src/admin/auth.ts.
+
+  /**
+   * Shared link de Plausible para la pestaña "Tráfico" de /admin (ver
+   * src/admin/views.ts: trafficPage). Va como secreto y no como var de
+   * wrangler.jsonc porque el link lleva su propio `?auth=`: quien lo tenga
+   * puede ver todo el tráfico del sitio sin pasar por /admin, así que no es
+   * algo para dejar en texto plano en git.
+   *
+   *   npx wrangler secret put PLAUSIBLE_SHARE_URL
+   *   # pega el shared link entero, ej. https://plausible.io/share/tudominio.com?auth=XXXX
+   */
+  PLAUSIBLE_SHARE_URL?: string;
 }
 
 export function json(body: unknown, status = 200): Response {

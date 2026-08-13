@@ -1,3 +1,4 @@
+import { TrackedCta } from "./commercial/TrackedCta";
 import { HeroIllustration } from "./illustrations/HeroIllustration";
 
 export function Hero() {
@@ -16,9 +17,9 @@ export function Hero() {
             “¿dónde está el taladro?” y te dice en qué caja está. Sin abrir nada.
           </p>
           <div className="hero-cta">
-            <a className="btn" href="#precios">
+            <TrackedCta className="btn" href="#precios" location="hero">
               Empezar gratis
-            </a>
+            </TrackedCta>
             <a className="btn btn-ghost" href="#como">
               Ver cómo funciona
             </a>

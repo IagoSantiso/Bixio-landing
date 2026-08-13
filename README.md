@@ -191,13 +191,52 @@ Detalles que conviene no romper al tocarlo:
 - El CSV escapa las celdas que empiezan por `= + - @`: ese texto lo escribe
   cualquiera desde un formulario público y Excel lo ejecutaría como fórmula.
 
-### Eventos
+### Tráfico (`/admin/trafico`)
 
-`components/commercial/analytics.ts` emite `cta_click`, `lead_submit`,
-`lead_ok`, `lead_error` y `business_type_select`, todos con la página de origen.
-El modal de particulares emite los mismos, con `lead_type: "particular"`.
-No carga ninguna herramienta: empuja a `dataLayer`, `gtag` y `plausible` si
-existen, y si no es un no-op. El día que se añada el tag, los eventos ya están.
+Pestaña nueva e independiente del CRM de leads: solo el shared link de
+Plausible, incrustado en un iframe a pantalla completa (`src/admin/views.ts`,
+`trafficPage`). No toca la tabla `leads` ni el resto del panel, y queda
+protegida por la misma sesión de `admin_user` que todo lo demás en
+`/admin/*` — no añade autenticación propia.
+
+El link vive en el secreto `PLAUSIBLE_SHARE_URL` del Worker y no en
+`wrangler.jsonc`: lleva su propio `?auth=`, así que quien lo tenga ve todo el
+tráfico del sitio sin pasar por `/admin`, y no es algo para dejar en texto
+plano en git. Para configurarlo, en Plausible: *Site settings → Sharing →
+Shared links*, crea uno y pégalo aquí:
+
+```bash
+npx wrangler secret put PLAUSIBLE_SHARE_URL
+# pega el link entero, ej. https://plausible.io/share/tudominio.com?auth=XXXX
+```
+
+Sin ese secreto, la pestaña lo dice en vez de enseñar un iframe roto.
+
+### Analítica (Plausible)
+
+La landing carga [Plausible](https://plausible.io) sin cookies ni banner de
+consentimiento: el snippet va como HTML manual en `app/layout.tsx` (un único
+layout raíz cubre la home, `/comercios` y `/recomienda`), justo antes de
+`</head>` — no con `next/script`, porque con `output: "export"` esa
+estrategia no deja el `<script>` en el HTML exportado, lo inyecta desde JS en
+tiempo de ejecución.
+
+Además del pageview automático, se disparan eventos custom con
+`plausible(nombre, { props })`:
+
+| Evento | Dónde | Props |
+| --- | --- | --- |
+| `Waitlist Submit` | `StartModal` (modal de particulares), al enviar con éxito | `segmento` |
+| `Lead B2B Submit` | `LeadForm`, al enviar con éxito en `/comercios` o `/recomienda` | `segmento` (`comercio` o `prescriptor`) |
+| `CTA Click` | botón principal del hero de cada página (`TrackedCta` con `location="hero"`) | `location`, `href`, `plan` si el CTA viene de uno concreto |
+
+`components/commercial/analytics.ts` es el puente genérico que usan `LeadForm`,
+`TrackedCta` y `StartModal`: emite `cta_click`, `lead_submit`, `lead_ok`,
+`lead_error` y `business_type_select`, todos con la página de origen (el modal
+de particulares emite los mismos, con `lead_type: "particular"`). Empuja a
+`dataLayer`, `gtag` y `plausible` si existen, y si no es un no-op — de ahí que
+los eventos con nombre propio de la tabla de arriba conviviesen ya en el código
+antes de que hubiese ninguna herramienta cargada.
 
 La landing original en HTML de una sola pieza ya no está en el árbol; queda en
 el historial de git (`git show 42fa3a6:index.html`).

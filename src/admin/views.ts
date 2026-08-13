@@ -161,6 +161,75 @@ export function errorPage(): Response {
   );
 }
 
+// --------------------------------------------------------------- tráfico
+
+/**
+ * Plausible añade una barra propia ("Plausible" + Login + Sign up) encima de
+ * cualquier shared link que no vaya en modo `embed`. Dentro de un iframe esa
+ * barra no solo estorba: sus enlaces llevan al login real de Plausible, que
+ * bloquea que lo carguen en un iframe (`X-Frame-Options`) y la pantalla se
+ * queda rota. `embed=true` la quita entera; `theme=light` la empareja con
+ * el resto de /admin, que no tiene modo oscuro.
+ */
+function embedUrl(shareUrl: string): string {
+  try {
+    const url = new URL(shareUrl);
+    url.searchParams.set("embed", "true");
+    if (!url.searchParams.has("theme")) url.searchParams.set("theme", "light");
+    return url.toString();
+  } catch {
+    // Un valor que no sea una URL válida no debería llegar hasta aquí, pero
+    // si pasa, mejor el shared link tal cual que un 500.
+    return shareUrl;
+  }
+}
+
+/**
+ * Sección nueva e independiente del CRM de leads: solo el shared link de
+ * Plausible. Nada de esto toca la tabla `leads` ni las pantallas de arriba —
+ * nótalo por la ausencia total de `db` en esta función.
+ *
+ * El iframe no lleva una altura fija: `embed.host.js` es el script que
+ * ofrece el propio Plausible para que el iframe mida el contenido real de la
+ * página incrustada y ajuste su altura a eso (escucha un `postMessage` que
+ * manda la página de dentro). El atributo `plausible-embed` es el que ese
+ * script usa para encontrar el iframe. Sin él, o el iframe se queda con una
+ * altura fija que no encaja con cuánto haya que enseñar — corto y con scroll
+ * propio si hay poco tráfico, cortado si hay mucho.
+ */
+export function trafficPage(email: string, csrf: string, shareUrl: string | undefined): Response {
+  const contenido = shareUrl
+    ? `<iframe
+    plausible-embed
+    class="trafico-iframe"
+    src="${escape(embedUrl(shareUrl))}"
+    title="Tráfico de Bixio (Plausible)"
+    loading="lazy"
+    style="height:1600px"
+  ></iframe>
+  <p class="trafico-attrib">
+    Estadísticas de <a href="https://plausible.io" target="_blank" rel="noopener">Plausible Analytics</a>
+  </p>
+  <script async src="https://plausible.io/js/embed.host.js"></script>`
+    : `<div class="aviso" style="margin:24px">
+  <h1>Falta configurar el shared link de Plausible</h1>
+  <p>
+    En Plausible: Site settings → Sharing → Shared links, crea uno (o usa el
+    que ya tengas) y pégalo aquí como secreto del Worker:
+  </p>
+  <pre>npx wrangler secret put PLAUSIBLE_SHARE_URL
+# pega el link entero, ej. https://plausible.io/share/tudominio.com?auth=XXXX</pre>
+</div>`;
+
+  return page(
+    "Tráfico",
+    `${topBar(email, csrf, "trafico")}
+<div class="main">
+${contenido}
+</div>`,
+  );
+}
+
 // -------------------------------------------------------------- listado
 
 function tagOrigen(lead: Lead): string {
